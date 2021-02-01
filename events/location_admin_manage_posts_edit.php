@@ -17,8 +17,6 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
   $this->config->load('extensions');
   $extensionsConfig = $this->config->item('extensions');
     
-
-    
   if(!empty($extensionsConfig['nova_ext_ordered_mission_posts']['timepicker_options'])){
     foreach($extensionsConfig['nova_ext_ordered_mission_posts']['timepicker_options'] as $key => $value){
       $timepickerOptions[$key] = $value;
@@ -30,16 +28,21 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
                         : 'Mission Day';
 
   $editDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_date'])? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_date']
-                        : 'Mission Date';
+                        : 'Date';
 
 
   $editStartDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate'])
                         ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate']
-                        : 'Mission Start Date';
+                        : 'Stardate';
 
   $editTimeLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time'])
                         ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time']
                         : 'Time';
+
+
+   $editConfigLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['nova_ext_ordered_config_setting'])
+                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['nova_ext_ordered_config_setting']
+                        : 'Configuration';
   
    $event['data']['label']['nova_ext_ordered_post_day'] = $editDayLabel;
       $event['data']['inputs']['nova_ext_ordered_post_day'] = array(
@@ -73,16 +76,22 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
         'style'=>'width: 281px;height: 31px;',
         'onkeypress' => 'return (function(evt)
         {
-              return false;
+             var charCode = (evt.which) ? evt.which : event.keyCode
+          if((charCode>=35 && charCode<=40)||(charCode>=96 && charCode<=105))
+        return true;
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    if(charCode==8)
+        return false;
         })(event)',
         'value' => $post ? $post->nova_ext_ordered_post_date : '1'
       );
 
 
-        $event['data']['label']['nova_ext_ordered_post_start_date'] = $editStartDateLabel;
-      $event['data']['inputs']['nova_ext_ordered_post_start_date'] = array(
-        'name' => 'nova_ext_ordered_post_start_date',
-        'id' => 'nova_ext_ordered_post_start_date',
+        $event['data']['label']['nova_ext_ordered_post_stardate'] = $editStartDateLabel;
+        $event['data']['inputs']['nova_ext_ordered_post_stardate'] = array(
+        'name' => 'nova_ext_ordered_post_stardate',
+        'id' => 'nova_ext_ordered_post_stardate',
         'onkeypress' => 'return (function(evt)
         {
            var charCode = (evt.which) ? evt.which : event.keyCode
@@ -92,26 +101,32 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
 
           return true;
         })(event)',
-        'value' => $post ? $post->nova_ext_ordered_post_start_date : '1'
+        'value' => $post ? $post->nova_ext_ordered_post_stardate : '1'
       );
-  
+          $event['data']['label']['nova_ext_ordered_config_setting'] = $editConfigLabel;
+         $event['data']['inputs']['nova_ext_ordered_config_setting'] = 'nova_ext_ordered_config_setting';
+        $event['data']['option']['nova_ext_ordered_config_setting'] = array(
+        'default'         => 'Timeline',
+        'day_time'           => 'Day Time',
+        'date_time'         => 'Date Time',
+        'startdate'        => 'Start Date',
+);
+$event['data']['value']['nova_ext_ordered_config_setting'] = $post ? $post->nova_ext_ordered_config_setting : 'default';
+$event['data']['configId']['nova_ext_ordered_config_setting'] = 'id="nova_ext_ordered_config_setting" style="width: 281px;height: 31px;"';
 });
 
 $this->event->listen(['location', 'view', 'output', 'admin', 'manage_posts_edit'], function($event){
 
- $this->config->load('extensions');
-    $extensionsConfig = $this->config->item('extensions');
 
- $dateFormatFile=  isset($extensionsConfig['nova_ext_ordered_mission_posts']['format'])?$extensionsConfig['nova_ext_ordered_mission_posts']['format']:'day_time';
 
   $event['output'] .= $this->extension['jquery']['generator']
                   ->select('[name="post_timeline"]')->closest('p')
-                  ->after(
+                  ->before(
                     $this->extension['nova_ext_ordered_mission_posts']
-                         ->view($dateFormatFile, $this->skin, 'admin', $event['data'])
+                         ->view('form', $this->skin, 'admin', $event['data'])
                   );
 
-  $event['output'] .= $this->extension['jquery']['generator']
-                           ->select('[name="post_timeline"]')->closest('p')->remove();
+ /* $event['output'] .= $this->extension['jquery']['generator']
+                           ->select('[name="post_timeline"]')->closest('p')->remove();*/
                   
 });
