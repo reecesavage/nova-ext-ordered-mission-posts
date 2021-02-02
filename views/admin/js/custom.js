@@ -1,12 +1,44 @@
 $(document).ready(function() {
-    var configId = $("#nova_ext_ordered_config_setting").val();
-    showHideFields(configId);
+
+    
+   var mission= $('[name="mission"]').val();
+   
+   if(typeof mission === "undefined")
+   {
+     mission= $('[name="post_mission"]').val();
+   }
+    getMission(mission);
+   
 
 
-    $(document).on("change", "#nova_ext_ordered_config_setting", function(e) {
-        configId = $(this).val();
-        showHideFields(configId);
+    $(document).on("change", '[name="mission"]', function(e) {
+        mission = $(this).val();
+        getMission(mission);
     });
+
+
+      $(document).on("change", '[name="post_mission"]', function(e) {
+        mission = $(this).val();
+        getMission(mission);
+    });
+
+    function getMission(mission)
+    { 
+            $.ajax({
+                type: "get",
+                url: "<?php echo site_url('extensions/nova_ext_ordered_mission_posts/ajax/mission')?>",
+                data: { mission: mission},
+                success: function(data){
+                    var response= JSON.parse(data);
+                    if(response.status=='OK')
+                    {   
+
+                         showHideFields(response.post.mission_ext_ordered_config_setting);
+                    }
+                }
+            });
+
+    }
 
     function showHideFields(configId) {
 
@@ -20,7 +52,7 @@ $(document).ready(function() {
             hideDayTime();
             hideStartDateTime();
             showDateTime();
-        } else if (configId == 'startdate') {
+        } else if (configId == 'stardate') {
             hideTimeLine();
             hideDayTime();
             hideDateTime();

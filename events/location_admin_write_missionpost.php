@@ -3,9 +3,14 @@
 
 $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'], function($event){
 
+
+
   $id = (is_numeric($this->uri->segment(3))) ? $this->uri->segment(3) : false;
   $post = $id ? $this->posts->get_post($id) : null;
   
+
+ 
+
   $timepickerOptions = [
     'timeFormat' => 'HHmm',
     'defaultTime' =>  $post ? $post->nova_ext_ordered_post_time : '0000'
@@ -32,7 +37,7 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
 
   $editStartDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate'])
                         ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate']
-                        : 'Startdate';
+                        : 'Stardate';
 
   $editTimeLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time'])
                         ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time']
@@ -49,11 +54,6 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
   $viewSuffixLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_view_suffix'])
                         ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_view_suffix']
                         : '';
-
-
-  $editConfigLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['nova_ext_ordered_config_setting'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['nova_ext_ordered_config_setting']
-                        : 'Configuration';
   
   switch($this->uri->segment(4)){
   
@@ -120,27 +120,19 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
         })(event)',
         'value' => $post ? $post->nova_ext_ordered_post_stardate : '1'
       );
-
-         $event['data']['label']['nova_ext_ordered_config_setting'] = $editConfigLabel;
-         $event['data']['inputs']['nova_ext_ordered_config_setting'] = 'nova_ext_ordered_config_setting';
-        $event['data']['option']['nova_ext_ordered_config_setting'] = array(
-        'default'         => 'Timeline',
-        'day_time'           => 'Day Time',
-        'date_time'         => 'Date Time',
-        'startdate'        => 'Start Date',
-);
-         $event['data']['value']['nova_ext_ordered_config_setting'] = $post ? $post->nova_ext_ordered_config_setting : 'default';
-      $event['data']['configId']['nova_ext_ordered_config_setting'] = 'id="nova_ext_ordered_config_setting" style="width: 281px;height: 31px;"';
   }
   
 });
-
 $this->event->listen(['location', 'view', 'output', 'admin', 'write_missionpost'], function($event){
   switch($this->uri->segment(4)){
     case 'view':
       break;
     default:
      
+
+
+
+
     $this->config->load('extensions');
     
                 $event['output'] .= $this->extension['jquery']['generator']
@@ -150,10 +142,6 @@ $this->event->listen(['location', 'view', 'output', 'admin', 'write_missionpost'
                              ->view('form', $this->skin, 'admin', $event['data'])
                       );
       
-     
-
-     /* $event['output'] .= $this->extension['jquery']['generator']
-                               ->select('#timeline')->closest('p')->remove();*/
  }
                   
 });

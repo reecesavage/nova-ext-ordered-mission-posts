@@ -26,7 +26,41 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
   
   $event['data']['posts'] = [];
 
-  $this->db->from('posts');
+
+   $query = $this->db->get_where('missions', array('mission_id' => $event['data']['mission']));
+   $model = ($query->num_rows() > 0) ? $query->row() : false;
+   if(!empty($model))
+   {
+
+      
+
+      if($model->mission_ext_ordered_config_setting=='day_time'){
+
+           $data['mission_day']='nova_ext_ordered_post_day';
+            $viewPrefixLabel=$editDayLabel;
+        
+          }else if($model->mission_ext_ordered_config_setting=='date_time')
+          {
+
+            $data['mission_day']='nova_ext_ordered_post_date';
+
+              $viewPrefixLabel=$editDateLabel;
+              
+          }else if($model->mission_ext_ordered_config_setting=='stardate')
+          {
+            $data['mission_day']='nova_ext_ordered_post_stardate';
+            $viewPrefixLabel=$editStartDateLabel;
+          }else {
+           
+           $data['mission_day']='';
+            
+          }
+
+
+
+
+
+       $this->db->from('posts');
   $this->db->where('post_mission', $event['data']['mission']);
   $this->db->where('post_status', 'activated');
   $this->db->order_by('nova_ext_ordered_post_time', 'desc');
@@ -38,22 +72,18 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
   {
     foreach ($posts->result() as $key=> $post)
     {     
-      $i=$key+1;
-          if($post->nova_ext_ordered_config_setting=='day_time'){
-            $viewPrefixLabel=$editDayLabel;
-            $timeline = $viewPrefixLabel.' '.$post->nova_ext_ordered_post_day.' '.$viewConcatLabel.' '.$post->nova_ext_ordered_post_time.' '.$viewSuffixLabel;
-
-          }else if($post->nova_ext_ordered_config_setting=='date_time')
+        $i=$key+1;
+          if($model->mission_ext_ordered_post_numbering==1)
           {
-              $viewPrefixLabel=$editDateLabel;
-              $timeline = $viewPrefixLabel.' '.$post->nova_ext_ordered_post_date.' '.$viewConcatLabel.' '.$post->nova_ext_ordered_post_time.' '.$viewSuffixLabel;
-          }else if($post->nova_ext_ordered_config_setting=='startdate')
-          {
-            $viewPrefixLabel=$editStartDateLabel;
-            $timeline = $viewPrefixLabel.' '.$post->nova_ext_ordered_post_stardate.' '.$viewConcatLabel.' '.$post->nova_ext_ordered_post_time.' '.$viewSuffixLabel;
-          }else {
-           
-
+             $title="Post $i - $post->post_title";
+           }else {
+            $title=$post->post_title;
+           }
+          
+           if(!empty($data['mission_day']))
+           {  $column= $data['mission_day'];
+               $timeline = $viewPrefixLabel.' '.$post->$column.' '.$viewConcatLabel.' '.$post->nova_ext_ordered_post_time.' '.$viewSuffixLabel;
+           }else {
             if(empty($post->post_timeline)){
 
               $viewPrefixLabel=$editDayLabel;
@@ -61,17 +91,15 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
             }else{
             $timeline = $post->post_timeline;
             }
-
-          }
-        
+           }
         $event['data']['posts'][] = [
             'id' => $post->post_id,
-            'title' => "Post $i - $post->post_title",
+            'title' => $title,
             'authors' => $this->char->get_authors($post->post_authors, true, true),
             'timeline' => $timeline,
             'location' => $post->post_location,
         ];
     }
   }
-  
+   }
 });

@@ -18,9 +18,11 @@ Run the following command in your MySQL database:
 ```
 ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_day INTEGER NOT NULL DEFAULT 1;
 ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_time VARCHAR(4) NOT NULL DEFAULT '0000';
-ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_date date NULL DEFAULT NULL;
+ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_date VARCHAR(255) DEFAULT NULL;
 ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_stardate VARCHAR(255) DEFAULT NULL;
-ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_config_setting VARCHAR(255) DEFAULT NULL;
+ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_config_setting VARCHAR(255) DEFAULT NULL;
+
+ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_post_numbering INTEGER NOT NULL DEFAULT 0;
 ```
 
 Add the following to `application/config/extensions.php`:
