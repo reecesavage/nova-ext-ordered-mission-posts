@@ -89,7 +89,7 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
         'name' => 'nova_ext_ordered_post_date',
         'id' => 'nova_ext_ordered_post_date',
         'type'=>'date',
-        'style'=>'width: 281px;height: 31px;',
+        
         'onkeypress' => 'return (function(evt)
         {  
             var charCode = (evt.which) ? evt.which : event.keyCode
@@ -101,7 +101,7 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
         return false;
              
         })(event)',
-        'value' => $post ? $post->nova_ext_ordered_post_date : '1'
+        'value' => $post ? $post->nova_ext_ordered_post_date : '0'
       );
 
 
@@ -118,7 +118,7 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
 
           return true;
         })(event)',
-        'value' => $post ? $post->nova_ext_ordered_post_stardate : '1'
+        'value' => $post ? $post->nova_ext_ordered_post_stardate : ''
       );
   }
   
@@ -129,10 +129,6 @@ $this->event->listen(['location', 'view', 'output', 'admin', 'write_missionpost'
       break;
     default:
      
-
-
-
-
     $this->config->load('extensions');
     
                 $event['output'] .= $this->extension['jquery']['generator']

@@ -21,6 +21,14 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
   $editPostNumberLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering'])
                         ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering']
                         : 'Post Numbering';
+
+  $defaultMissionDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date'])
+                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date']
+                        : 'Default Mission Date';
+
+  $defaultStardateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate'])
+                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate']
+                        : 'Default Stardate';
   
   switch($this->uri->segment(4)){
      
@@ -37,13 +45,51 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
         'stardate'        => 'Stardate',
 );
          $event['data']['value']['mission_ext_ordered_config_setting'] = $post ? $post->mission_ext_ordered_config_setting : 'default';
-      $event['data']['configId']['mission_ext_ordered_config_setting'] = 'id="mission_ext_ordered_config_setting" style="width: 281px;height: 31px;"';
+      $event['data']['configId']['mission_ext_ordered_config_setting'] = 'id="mission_ext_ordered_config_setting"';
 
 
       $event['data']['label']['mission_ext_ordered_post_numbering'] = $editPostNumberLabel;
          $event['data']['inputs']['mission_ext_ordered_post_numbering'] = 'mission_ext_ordered_post_numbering';
          $event['data']['value']['mission_ext_ordered_post_numbering'] = '1';
-      $event['data']['checked']['mission_ext_ordered_post_numbering'] = $post ? $post->mission_ext_ordered_post_numbering : '0';
+       $event['data']['checked']['mission_ext_ordered_post_numbering'] = $post ? $post->mission_ext_ordered_post_numbering : '0';
+
+
+        $event['data']['label']['mission_ext_ordered_default_mission_date'] = $defaultMissionDateLabel;
+      $event['data']['inputs']['mission_ext_ordered_default_mission_date'] = array(
+        'name' => 'mission_ext_ordered_default_mission_date',
+        'id' => 'mission_ext_ordered_default_mission_date',
+        'type'=>'date',
+        
+        'onkeypress' => 'return (function(evt)
+        {  
+            var charCode = (evt.which) ? evt.which : event.keyCode
+          if((charCode>=35 && charCode<=40)||(charCode>=96 && charCode<=105))
+        return true;
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    if(charCode==8)
+        return false;
+             
+        })(event)',
+        'value' => $post ? $post->mission_ext_ordered_default_mission_date : '1'
+      );
+
+
+       $event['data']['label']['mission_ext_ordered_default_stardate'] = $defaultStardateLabel;
+        $event['data']['inputs']['mission_ext_ordered_default_stardate'] = array(
+        'name' => 'mission_ext_ordered_default_stardate',
+        'id' => 'mission_ext_ordered_default_stardate',
+        'onkeypress' => 'return (function(evt)
+        {
+           var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+        })(event)',
+        'value' => $post ? $post->mission_ext_ordered_default_stardate : '1'
+      );
 
 
   }

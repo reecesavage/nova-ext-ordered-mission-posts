@@ -2,7 +2,6 @@
 
 $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], function($event){
   
-
   $this->config->load('extensions'); 
   $extensionsConfig = $this->config->item('extensions');
        $editDayLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_view_prefix'])
@@ -43,7 +42,6 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
           {
 
             $data['mission_day']='nova_ext_ordered_post_date';
-
               $viewPrefixLabel=$editDateLabel;
               
           }else if($model->mission_ext_ordered_config_setting=='stardate')
@@ -56,15 +54,17 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
             
           }
 
-
-
-
-
-       $this->db->from('posts');
+$this->db->from('posts');
   $this->db->where('post_mission', $event['data']['mission']);
   $this->db->where('post_status', 'activated');
-  $this->db->order_by('nova_ext_ordered_post_time', 'desc');
-  $this->db->order_by($postOrderColumnFallback, 'desc');
+  if($model->mission_ext_ordered_post_numbering==1)
+  {
+       $this->db->order_by($postOrderColumnFallback, 'asc');
+  }else {
+    $this->db->order_by('post_chronological_mission_post_day', 'desc');
+    $this->db->order_by('post_chronological_mission_post_time', 'desc');
+  }
+ 
   $this->db->limit(25, 0);
   $posts = $this->db->get();
 
@@ -85,9 +85,8 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
                $timeline = $viewPrefixLabel.' '.$post->$column.' '.$viewConcatLabel.' '.$post->nova_ext_ordered_post_time.' '.$viewSuffixLabel;
            }else {
             if(empty($post->post_timeline)){
-
               $viewPrefixLabel=$editDayLabel;
-            $timeline = $viewPrefixLabel.' '.$post->post_chronological_mission_post_day.' '.$viewConcatLabel.' '.$post->post_chronological_mission_post_time.' '.$viewSuffixLabel;
+              $timeline = $viewPrefixLabel.' '.$post->post_chronological_mission_post_day.' '.$viewConcatLabel.' '.$post->post_chronological_mission_post_time.' '.$viewSuffixLabel;
             }else{
             $timeline = $post->post_timeline;
             }

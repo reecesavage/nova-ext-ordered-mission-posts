@@ -22,24 +22,38 @@ if(($date = $this->input->post('nova_ext_ordered_post_date', true)) !== false)
     $event['data']['nova_ext_ordered_post_date'] = $date;
 });
 
-
-
 $this->event->listen(['db', 'insert', 'prepare', 'missions'], function($event){
-
-
   if(($config = $this->input->post('mission_ext_ordered_config_setting', true)) !== false)
     $event['data']['mission_ext_ordered_config_setting'] = $config;
-
     if(($postNumbering = $this->input->post('mission_ext_ordered_post_numbering', true)) !== false)
     $event['data']['mission_ext_ordered_post_numbering'] = $postNumbering;
+  if(($defaultMissionDate = $this->input->post('mission_ext_ordered_default_mission_date', true)) !== false)
+    $event['data']['mission_ext_ordered_default_mission_date'] = $defaultMissionDate;
+
+  if(($defaultStardate = $this->input->post('mission_ext_ordered_default_stardate', true)) !== false)
+    $event['data']['mission_ext_ordered_default_stardate'] = $defaultStardate;
+
+
 
 });
 $this->event->listen(['db', 'update', 'prepare', 'missions'], function($event){
-
-
   if(($config = $this->input->post('mission_ext_ordered_config_setting', true)) !== false)
     $event['data']['mission_ext_ordered_config_setting'] = $config;
 
+
+
     if(($postNumbering = $this->input->post('mission_ext_ordered_post_numbering', true)) !== false)
-    $event['data']['mission_ext_ordered_post_numbering'] = $postNumbering;
+    {
+      $event['data']['mission_ext_ordered_post_numbering'] = $postNumbering;
+    }else {
+       $event['data']['mission_ext_ordered_post_numbering'] = 0;
+    }
+    if(($defaultMissionDate = $this->input->post('mission_ext_ordered_default_mission_date', true)) !== false)
+    $event['data']['mission_ext_ordered_default_mission_date'] = $defaultMissionDate;
+
+  if(($defaultStardate = $this->input->post('mission_ext_ordered_default_stardate', true)) !== false)
+    $event['data']['mission_ext_ordered_default_stardate'] = $defaultStardate;
+
+
+   
 });

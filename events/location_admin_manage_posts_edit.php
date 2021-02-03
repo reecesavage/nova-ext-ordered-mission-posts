@@ -71,7 +71,7 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
         'name' => 'nova_ext_ordered_post_date',
         'id' => 'nova_ext_ordered_post_date',
         'type'=>'date',
-        'style'=>'width: 281px;height: 31px;',
+        
         'onkeypress' => 'return (function(evt)
         {
              var charCode = (evt.which) ? evt.which : event.keyCode
@@ -99,7 +99,7 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
 
           return true;
         })(event)',
-        'value' => $post ? $post->nova_ext_ordered_post_stardate : '1'
+        'value' => $post ? $post->nova_ext_ordered_post_stardate : ''
       );
 });
 

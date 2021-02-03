@@ -1,42 +1,64 @@
 $(document).ready(function() {
 
-    
-   var mission= $('[name="mission"]').val();
-   
-   if(typeof mission === "undefined")
-   {
-     mission= $('[name="post_mission"]').val();
-   }
+
+    var mission = $('[name="mission"]').val();
+
+
+    if (typeof mission === "undefined") {
+        mission = $('[name="post_mission"]').val();
+    }
     getMission(mission);
-   
+
 
 
     $(document).on("change", '[name="mission"]', function(e) {
         mission = $(this).val();
         getMission(mission);
+        $('[name="nova_ext_ordered_post_date"]').val('');
+        $('[name="nova_ext_ordered_post_stardate"]').val('');
+
     });
 
 
-      $(document).on("change", '[name="post_mission"]', function(e) {
+    $(document).on("change", '[name="post_mission"]', function(e) {
         mission = $(this).val();
         getMission(mission);
+        $('[name="nova_ext_ordered_post_date"]').val('');
+        $('[name="nova_ext_ordered_post_stardate"]').val('');
     });
 
-    function getMission(mission)
-    { 
-            $.ajax({
-                type: "get",
-                url: "<?php echo site_url('extensions/nova_ext_ordered_mission_posts/ajax/mission')?>",
-                data: { mission: mission},
-                success: function(data){
-                    var response= JSON.parse(data);
-                    if(response.status=='OK')
-                    {   
+    function getMission(mission) {
 
-                         showHideFields(response.post.mission_ext_ordered_config_setting);
+
+
+        $.ajax({
+            type: "get",
+            url: "<?php echo site_url('extensions/nova_ext_ordered_mission_posts/ajax/mission')?>",
+            data: {
+                mission: mission
+            },
+            success: function(data) {
+                var response = JSON.parse(data);
+                if (response.status == 'OK') {
+                    showHideFields(response.post.mission_ext_ordered_config_setting);
+                    var dateValue = $('[name="nova_ext_ordered_post_date"]').val();
+                    var stardate = $('[name="nova_ext_ordered_post_stardate"]').val();
+                    if (response.post.mission_ext_ordered_default_mission_date != null && dateValue == "") {
+
+                        $('[name="nova_ext_ordered_post_date"]').val(response.post.mission_ext_ordered_default_mission_date);
+
                     }
+
+                    if (response.post.mission_ext_ordered_default_stardate != null && stardate == "") {
+
+                        $('[name="nova_ext_ordered_post_stardate"]').val(response.post.mission_ext_ordered_default_stardate);
+
+
+                    }
+
                 }
-            });
+            }
+        });
 
     }
 
