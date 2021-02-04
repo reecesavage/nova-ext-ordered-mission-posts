@@ -34,19 +34,28 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
       
 
       if($model->mission_ext_ordered_config_setting=='day_time'){
+              
 
-           $data['mission_day']='nova_ext_ordered_post_day';
-            $viewPrefixLabel=$editDayLabel;
+              if($model->mission_ext_ordered_legacy_mode==1){
+                 $data['mission_day']='post_chronological_mission_post_day';
+                 $data['mission_time']='post_chronological_mission_post_time';
+              }else {
+                $data['mission_day']='nova_ext_ordered_post_day';
+                $data['mission_time']='nova_ext_ordered_post_time';
+              }
+           
+           $viewPrefixLabel=$editDayLabel;
         
           }else if($model->mission_ext_ordered_config_setting=='date_time')
           {
-
             $data['mission_day']='nova_ext_ordered_post_date';
-              $viewPrefixLabel=$editDateLabel;
+            $data['mission_time']='nova_ext_ordered_post_time';
+            $viewPrefixLabel=$editDateLabel;
               
           }else if($model->mission_ext_ordered_config_setting=='stardate')
           {
             $data['mission_day']='nova_ext_ordered_post_stardate';
+            $data['mission_time']='nova_ext_ordered_post_time';
             $viewPrefixLabel=$editStartDateLabel;
           }else {
            
@@ -60,9 +69,16 @@ $this->db->from('posts');
   if($model->mission_ext_ordered_post_numbering==1)
   {
        $this->db->order_by($postOrderColumnFallback, 'asc');
-  }else {
-    $this->db->order_by('post_chronological_mission_post_day', 'desc');
-    $this->db->order_by('post_chronological_mission_post_time', 'desc');
+  }else if(!empty($data['mission_day'])) {
+
+    $column= $data['mission_day'];
+     $timeColumn= $data['mission_time'];
+
+     
+     $this->db->order_by('cast('.$column.' as UNSIGNED)', 'desc');
+     $this->db->order_by($timeColumn, 'desc');
+     
+      
   }
  
   $this->db->limit(25, 0);
@@ -82,14 +98,10 @@ $this->db->from('posts');
           
            if(!empty($data['mission_day']))
            {  $column= $data['mission_day'];
-               $timeline = $viewPrefixLabel.' '.$post->$column.' '.$viewConcatLabel.' '.$post->nova_ext_ordered_post_time.' '.$viewSuffixLabel;
+               $timeColumn= $data['mission_time'];
+               $timeline = $viewPrefixLabel.' '.$post->$column.' '.$viewConcatLabel.' '.$post->$timeColumn.' '.$viewSuffixLabel;
            }else {
-            if(empty($post->post_timeline)){
-              $viewPrefixLabel=$editDayLabel;
-              $timeline = $viewPrefixLabel.' '.$post->post_chronological_mission_post_day.' '.$viewConcatLabel.' '.$post->post_chronological_mission_post_time.' '.$viewSuffixLabel;
-            }else{
             $timeline = $post->post_timeline;
-            }
            }
         $event['data']['posts'][] = [
             'id' => $post->post_id,

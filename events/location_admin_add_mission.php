@@ -29,6 +29,10 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
   $defaultStardateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate'])
                         ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate']
                         : 'Default Stardate';
+
+  $legacyModeLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode'])
+                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode']
+                        : 'Day Time Legacy Mode';
   
   switch($this->uri->segment(4)){
      
@@ -90,6 +94,12 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
         })(event)',
         'value' => $post ? $post->mission_ext_ordered_default_stardate : '1'
       );
+
+
+         $event['data']['label']['mission_ext_ordered_legacy_mode'] = $legacyModeLabel;
+         $event['data']['inputs']['mission_ext_ordered_legacy_mode'] = 'mission_ext_ordered_legacy_mode';
+         $event['data']['value']['mission_ext_ordered_legacy_mode'] = '1';
+       $event['data']['checked']['mission_ext_ordered_legacy_mode'] = $post ? $post->mission_ext_ordered_legacy_mode : '0';
 
 
   }

@@ -2,11 +2,12 @@ $(document).ready(function() {
 
 
     var mission = $('[name="mission"]').val();
-
-
     if (typeof mission === "undefined") {
         mission = $('[name="post_mission"]').val();
     }
+    var config = $('[name="mission_ext_ordered_config_setting"]').val();
+
+    showHideDefault(config);
     getMission(mission);
 
 
@@ -18,6 +19,26 @@ $(document).ready(function() {
         $('[name="nova_ext_ordered_post_stardate"]').val('');
 
     });
+
+     $(document).on("change", '[name="mission_ext_ordered_config_setting"]', function(e) {
+          config=  $(this).val();
+          showHideDefault(config);
+     });
+
+    function showHideDefault(config)
+    {
+       if(config=='date_time'){
+          $('.mission_ext_ordered_default_mission_date').css("display", "block");
+          $('.mission_ext_ordered_default_stardate').css("display", "none");
+       }else if(config=='stardate')
+       {
+            $('.mission_ext_ordered_default_mission_date').css("display", "none");
+             $('.mission_ext_ordered_default_stardate').css("display", "block");
+       }else {
+            $('.mission_ext_ordered_default_mission_date').css("display", "none");
+            $('.mission_ext_ordered_default_stardate').css("display", "none");
+       }
+    }
 
 
     $(document).on("change", '[name="post_mission"]', function(e) {
@@ -40,6 +61,15 @@ $(document).ready(function() {
             success: function(data) {
                 var response = JSON.parse(data);
                 if (response.status == 'OK') {
+
+                    if(response.post.mission_ext_ordered_legacy_mode==1 && response.post.mission_ext_ordered_config_setting=='day_time'){
+                        $('#nova_ext_ordered_post_day').attr('name','post_chronological_mission_post_day');
+                         $('#nova_ext_ordered_post_time').attr('name','post_chronological_mission_post_time');
+                   
+                    }else {
+                         $('#nova_ext_ordered_post_day').attr('name','nova_ext_ordered_post_day');
+                         $('#nova_ext_ordered_post_time').attr('name','nova_ext_ordered_post_time');
+                    }
                     showHideFields(response.post.mission_ext_ordered_config_setting);
                     var dateValue = $('[name="nova_ext_ordered_post_date"]').val();
                     var stardate = $('[name="nova_ext_ordered_post_stardate"]').val();

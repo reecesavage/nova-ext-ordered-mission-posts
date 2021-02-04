@@ -2,16 +2,31 @@
 
 $this->event->listen(['location', 'view', 'data', 'admin', 'manage_posts_edit'], function($event){
   
-
-
 $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
   $post = $id ? $this->posts->get_post($id) : null;
+    
+    $postDay= $post ? $post->nova_ext_ordered_post_day : 1;
+    $postTime=$post ? $post->nova_ext_ordered_post_time : '0000';
+    $postDayName='nova_ext_ordered_post_day';
+    $postTimeName='nova_ext_ordered_post_time';
+  if(!empty($post))
+  {
+     $query = $this->db->get_where('missions', array('mission_id' => $post->post_mission));
+   $model = ($query->num_rows() > 0) ? $query->row() : false;
+   if(!empty($model) && $model->mission_ext_ordered_legacy_mode==1 && $model->mission_ext_ordered_config_setting=='day_time')
+   {
+        $postDay=$post->post_chronological_mission_post_day;
+        $postTime=$post->post_chronological_mission_post_time;
 
+        $postDayName='post_chronological_mission_post_day';
+        $postTimeName='post_chronological_mission_post_time';
+   }
+  }
   
   
   $timepickerOptions = [
     'timeFormat' => 'HHmm',
-    'defaultTime' =>  $post ? $post->nova_ext_ordered_post_time : '0000'
+    'defaultTime' =>  $postTime
   ];
 
   $this->config->load('extensions');
@@ -44,7 +59,7 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
   
    $event['data']['label']['nova_ext_ordered_post_day'] = $editDayLabel;
       $event['data']['inputs']['nova_ext_ordered_post_day'] = array(
-        'name' => 'nova_ext_ordered_post_day',
+        'name' => $postDayName,
         'id' => 'nova_ext_ordered_post_day',
         'onkeypress' => 'return (function(evt)
         {
@@ -54,15 +69,15 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
 
            return true;
         })(event)',
-        'value' => $post ? $post->nova_ext_ordered_post_day : '1'
+        'value' => $postDay
       );
       
       $event['data']['label']['nova_ext_ordered_post_time'] = $editTimeLabel;
       $event['data']['inputs']['nova_ext_ordered_post_time'] = array(
-        'name' => 'nova_ext_ordered_post_time',
+        'name' => $postTimeName,
         'id' => 'nova_ext_ordered_post_time',
         'data-timepicker' => str_replace('"', '&quot;', json_encode($timepickerOptions)),
-        'value' => $post ? $post->nova_ext_ordered_post_time : '0000'
+        'value' => $postTime
       );
 
 
@@ -114,7 +129,4 @@ $this->event->listen(['location', 'view', 'output', 'admin', 'manage_posts_edit'
                          ->view('form', $this->skin, 'admin', $event['data'])
                   );
 
- /* $event['output'] .= $this->extension['jquery']['generator']
-                           ->select('[name="post_timeline"]')->closest('p')->remove();*/
-                  
 });
