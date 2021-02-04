@@ -2,14 +2,14 @@
 
 This extension provides multiple methods for ordering mission posts. Day/Time, Date/Time, Stardate(decimal)/Time.
 
-While this extension is not a fork of ['chronological_mission_posts'](https://github.com/jonmatterson/nova-ext-chronological_mission_posts) it would not have been possible without it and ['Jon's'](https://github.com/jonmatterson?tab=repositories) other wonderful extensions.
+While this extension is not a fork of [`chronological_mission_posts`](https://github.com/jonmatterson/nova-ext-chronological_mission_posts) it would not have been possible without it and [Jon's](https://github.com/jonmatterson?tab=repositories) other wonderful extensions.
 
 This extension requires:
 
 - Nova 2.6+
 - Nova Extension [`jquery`](https://github.com/jonmatterson/nova-ext-jquery)
 - Nova Extension [`timepicker`](https://github.com/jonmatterson/nova-ext-timepicker)
-- Nova Mod ['parser_events'](https://github.com/jonmatterson/nova-mod-parser_events)
+- Nova Mod [`parser_events`](https://github.com/jonmatterson/nova-mod-parser_events)
 
 ## Installation
 
