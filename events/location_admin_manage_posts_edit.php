@@ -31,6 +31,15 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
 
   $this->config->load('extensions');
   $extensionsConfig = $this->config->item('extensions');
+
+
+   $extConfigFilePath = dirname(__FILE__).'/../config.json';
+         
+        if ( file_exists( $extConfigFilePath ) ) { 
+            $file = file_get_contents( $extConfigFilePath );
+            $json = json_decode( $file, true );
+    }
+    
     
   if(!empty($extensionsConfig['nova_ext_ordered_mission_posts']['timepicker_options'])){
     foreach($extensionsConfig['nova_ext_ordered_mission_posts']['timepicker_options'] as $key => $value){
@@ -38,20 +47,20 @@ $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
     }
   }
   
-  $editDayLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_day'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_day']
+  $editDayLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_day'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_edit_day']
                         : 'Mission Day';
 
-  $editDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_date'])? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_date']
+  $editDateLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_date'])? $json['nova_ext_ordered_mission_posts']['label_edit_date']
                         : 'Date';
 
 
-  $editStartDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate']
+  $editStartDateLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_startdate'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_edit_startdate']
                         : 'Stardate';
 
-  $editTimeLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time']
+  $editTimeLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_time'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_edit_time']
                         : 'Time';
 
 

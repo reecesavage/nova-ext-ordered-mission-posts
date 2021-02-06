@@ -2,8 +2,6 @@
  
 $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_action'], function($event){
 
-
-  
    $id = isset($event['data']['id'])?$event['data']['id']:'';
    if(!empty($id))
    {
@@ -13,25 +11,33 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
   $this->config->load('extensions');
   $extensionsConfig = $this->config->item('extensions');
 
+   $extConfigFilePath = dirname(__FILE__).'/../config.json';
+         
+        if ( file_exists( $extConfigFilePath ) ) { 
+            $file = file_get_contents( $extConfigFilePath );
+            $json = json_decode( $file, true );
+    }
+       
 
-  $editConfigLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting']
-                        : 'Configuration';
 
-  $editPostNumberLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering']
+  $editConfigLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting']
+                        : 'Timeline Configuration';
+
+  $editPostNumberLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering']
                         : 'Post Numbering';
 
-  $defaultMissionDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date']
+  $defaultMissionDateLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date']
                         : 'Default Mission Date';
 
-  $defaultStardateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate']
+  $defaultStardateLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate']
                         : 'Default Stardate';
 
-  $legacyModeLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode']
+  $legacyModeLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode']
                         : 'Day Time Legacy Mode';
   
   switch($this->uri->segment(4)){
@@ -77,7 +83,7 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
         })(event)',
         'value' => $post ? $post->mission_ext_ordered_default_mission_date : '1'
       );
-
+ 
 
        $event['data']['label']['mission_ext_ordered_default_stardate'] = $defaultStardateLabel;
         $event['data']['inputs']['mission_ext_ordered_default_stardate'] = array(

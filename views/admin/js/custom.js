@@ -26,17 +26,29 @@ $(document).ready(function() {
      });
 
     function showHideDefault(config)
-    {
+    { 
+
+       
+       $('.mission_ext_ordered_legacy_mode').css("display",'none');
+
        if(config=='date_time'){
           $('.mission_ext_ordered_default_mission_date').css("display", "block");
           $('.mission_ext_ordered_default_stardate').css("display", "none");
+
+         
        }else if(config=='stardate')
        {
             $('.mission_ext_ordered_default_mission_date').css("display", "none");
              $('.mission_ext_ordered_default_stardate').css("display", "block");
-       }else {
+             
+       }else if(config=='day_time') {
             $('.mission_ext_ordered_default_mission_date').css("display", "none");
             $('.mission_ext_ordered_default_stardate').css("display", "none");
+              $('.mission_ext_ordered_legacy_mode').css("display",'block');
+            
+       }else {
+          $('.mission_ext_ordered_default_mission_date').css("display", "none");
+          $('.mission_ext_ordered_default_stardate').css("display", "none");
        }
     }
 
@@ -54,7 +66,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "get",
-            url: "<?php echo site_url('extensions/nova_ext_ordered_mission_posts/ajax/mission')?>",
+            url: "<?php echo site_url('extensions/nova_ext_ordered_mission_posts/Ajax/mission')?>",
             data: {
                 mission: mission
             },
@@ -93,6 +105,8 @@ $(document).ready(function() {
     }
 
     function showHideFields(configId) {
+      
+
 
         if (configId == 'day_time') {
             hideTimeLine();

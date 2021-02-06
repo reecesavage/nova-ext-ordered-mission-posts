@@ -1,0 +1,15 @@
+{
+    "nova_ext_ordered_mission_posts": {
+        "mission_ext_ordered_config_setting": "Timeline Configuration",
+        "mission_ext_ordered_post_numbering": "Post Numbering",
+        "mission_ext_ordered_default_mission_date": "Default Mission Date",
+        "mission_ext_ordered_default_stardate": "Default Stardate",
+        "mission_ext_ordered_legacy_mode": "Day Time Legacy Mode",
+        "label_edit_day": "Mission Day",
+        "label_edit_date": "Date",
+        "label_edit_startdate": "Stardate",
+        "label_edit_time": "Time",
+        "label_view_concat": "at",
+        "label_view_suffix": ""
+    }
+}
