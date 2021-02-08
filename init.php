@@ -3,9 +3,14 @@
 $this->require_extension('jquery');
 $this->require_extension('timepicker');
 
+
 $this->event->listen(['template', 'render', 'data'], function($event){
-  $event['data']['javascript'] 
-        .= $this->extension['nova_ext_ordered_mission_posts']->inline_js('custom', 'admin');
+
+	$modFolder=  base_url() . MODFOLDER;
+    $event['data']['javascript'] 
+        .= '<link rel="stylesheet" href="'.$modFolder.'/assets/js/css/jquery.ui.datepicker.css">' 
+        . '<script type="text/javascript" src="'.$modFolder.'/assets/js/jquery.ui.datepicker.min.js"></script>'
+        .$this->extension['nova_ext_ordered_mission_posts']->inline_js('custom', 'admin');
 });
 require_once dirname(__FILE__).'/events/location_admin_write_missionpost.php';
 require_once dirname(__FILE__).'/events/db.php';

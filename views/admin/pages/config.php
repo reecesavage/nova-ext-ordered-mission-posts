@@ -3,8 +3,8 @@
 
 <?php foreach($jsons['nova_ext_ordered_mission_posts'] as $key=>$field){ ?>
 			<p>
-				<kbd><?=$key?></kbd>
-				<input type="text" name="<?=$key?>" value="<?=$field?>">	
+				<kbd><?=$field['name']?></kbd>
+				<input type="text" name="<?=$key?>" value="<?=$field['value']?>">	
 			</p>
 <?php } ?>
 			<br>

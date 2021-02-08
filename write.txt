@@ -1,0 +1,29 @@
+ protected function _email($type, $data)
+	{   
+		switch ($type)
+		{
+			case 'post':  
+              if(($id = $this->input->post('mission', true)) !== false)
+                {  
+                	
+              		 $query = $this->db->get_where('missions', array('mission_id' => $id));
+   						$model = ($query->num_rows() > 0) ? $query->row() : false;
+  						 if(!empty($model) && $model->mission_ext_ordered_post_numbering==1)
+   							{
+                             
+               $queryCount = $this->db->get_where('posts', array('post_mission' => $id,'post_status'=>'activated'));
+               $count = $queryCount->num_rows();
+                    $title=$data['title'];
+                   $data['title']="Post $count - $title";
+   							}
+                   }
+                  parent::_email($type, $data);
+			break;
+			default:
+                    parent::_email($type, $data);
+			break;
+				
+		}
+	
+}
+}

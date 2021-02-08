@@ -1,17 +1,33 @@
 $(document).ready(function() {
+  
 
+  var image= "<?=base_url()?>/application/views/default/admin/images/calendar-day.png";
+  var $date = $('.datepick').datepicker({
+            numberOfMonths: 2,
+            showButtonPanel: true,
+            showOn: 'button',
+            buttonImage: image,
+            buttonImageOnly: true
+        });
+        $date.closest('body').find('#ui-datepicker-div').wrap('<span class="UITheme"></span>');
+        $date.datepicker('option', {dateFormat: 'yy-mm-dd'});
 
     var mission = $('[name="mission"]').val();
     if (typeof mission === "undefined") {
         mission = $('[name="post_mission"]').val();
     }
+    
+     var defaultDate= $('input[name=mission_ext_ordered_default_mission_date]').attr('data-value');
+     $('input[name=mission_ext_ordered_default_mission_date]').val(defaultDate);
+    
+
+       var editDate= $('input[name=nova_ext_ordered_post_date]').attr('data-value');
+     $('input[name=nova_ext_ordered_post_date]').val(editDate);
+
     var config = $('[name="mission_ext_ordered_config_setting"]').val();
 
     showHideDefault(config);
     getMission(mission);
-
-
-
     $(document).on("change", '[name="mission"]', function(e) {
         mission = $(this).val();
         getMission(mission);

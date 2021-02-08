@@ -13,19 +13,19 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
     }
     
        $editDayLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_prefix'])
-                        ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']['value']
                         : 'Mission Day';
        $editDateLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_prefix'])
-                        ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']['value']
                         : 'Date';
         $editStartDateLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_prefix'])
-                        ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']['value']
                         : 'Stardate';
   $viewConcatLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_concat'])
-                        ? $json['nova_ext_ordered_mission_posts']['label_view_concat']
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_concat']['value']
                         : 'at';
   $viewSuffixLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_suffix'])
-                        ? $json['nova_ext_ordered_mission_posts']['label_view_suffix']
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_suffix']['value']
                         : '';
   $postOrderColumnFallback = isset($json['nova_ext_ordered_mission_posts']['post_order_column_fallback'])
                         ? $json['nova_ext_ordered_mission_posts']['post_order_column_fallback']

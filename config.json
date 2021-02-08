@@ -1,15 +1,48 @@
 {
     "nova_ext_ordered_mission_posts": {
-        "mission_ext_ordered_config_setting": "Timeline Configuration",
-        "mission_ext_ordered_post_numbering": "Post Numbering",
-        "mission_ext_ordered_default_mission_date": "Default Mission Date",
-        "mission_ext_ordered_default_stardate": "Default Stardate",
-        "mission_ext_ordered_legacy_mode": "Day Time Legacy Mode",
-        "label_edit_day": "Mission Day",
-        "label_edit_date": "Date",
-        "label_edit_startdate": "Stardate",
-        "label_edit_time": "Time",
-        "label_view_concat": "at",
-        "label_view_suffix": ""
+        "mission_ext_ordered_config_setting": {
+            "name": "Timeline Configuration - Label",
+            "value": "Timeline Configurationdd"
+        },
+        "mission_ext_ordered_post_numbering": {
+            "name": "Post Numbering - Label",
+            "value": "Post Numbering"
+        },
+        "mission_ext_ordered_default_mission_date": {
+            "name": "Default Mission Date - Label",
+            "value": "Default Mission Date"
+        },
+        "mission_ext_ordered_default_stardate": {
+            "name": "Default Stardate - Label",
+            "value": "Default Stardate"
+        },
+        "mission_ext_ordered_legacy_mode": {
+            "name": "Emulate Chronological Mission Posts - Label",
+            "value": "Day Time Legacy Mode"
+        },
+        "label_edit_day": {
+            "name": "Mission Post Day - Label",
+            "value": "Mission Day"
+        },
+        "label_edit_date": {
+            "name": "Mission Post Date - Label",
+            "value": "Date"
+        },
+        "label_edit_startdate": {
+            "name": "Mission Post Stardate - Label",
+            "value": "Stardate"
+        },
+        "label_edit_time": {
+            "name": "Mission Post Time - Label",
+            "value": "Times"
+        },
+        "label_view_concat": {
+            "name": "Concat - Label (Mission Day 2 <b>at<\/b> 2300)",
+            "value": "at"
+        },
+        "label_view_suffix": {
+            "name": "Suffix - Label (Mission Day 2 at 2300 <b>Hours<\/b>)",
+            "value": ""
+        }
     }
 }
