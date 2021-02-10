@@ -34,6 +34,8 @@ ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_post_numbering INTEGER 
 ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_default_mission_date VARCHAR(255) DEFAULT NULL;
 ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_default_stardate VARCHAR(255) DEFAULT NULL;
 ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_legacy_mode INTEGER NOT NULL DEFAULT 0;
+
+ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_is_new_record int(11) DEFAULT 0;
 ```
 
 Add the following to `application/config/extensions.php`:

@@ -20,6 +20,9 @@ $this->event->listen(['db', 'insert', 'prepare', 'posts'], function($event){
   if(($time = $this->input->post('nova_ext_ordered_post_time', true)) !== false)
     $event['data']['nova_ext_ordered_post_time'] = $time;
    }
+
+  
+
 if(($startDate = $this->input->post('nova_ext_ordered_post_stardate', true)) !== false)
     $event['data']['nova_ext_ordered_post_stardate'] = $startDate;
 if(($date = $this->input->post('nova_ext_ordered_post_date', true)) !== false)
@@ -47,10 +50,14 @@ if(($date = $this->input->post('nova_ext_ordered_post_date', true)) !== false)
 });
 
 $this->event->listen(['db', 'insert', 'prepare', 'missions'], function($event){
+
+    $event['data']['mission_ext_ordered_is_new_record'] = 1;
+
+    
   if(($config = $this->input->post('mission_ext_ordered_config_setting', true)) !== false)
     $event['data']['mission_ext_ordered_config_setting'] = $config;
     if(($postNumbering = $this->input->post('mission_ext_ordered_post_numbering', true)) !== false)
-    $event['data']['mission_ext_ordered_post_numbering'] = $postNumbering;
+    $event['data']['mission_ext_ordered_post_numbering'] =  $postNumbering;
 
       if(($legacyMode = $this->input->post('mission_ext_ordered_legacy_mode', true)) !== false)
     $event['data']['mission_ext_ordered_legacy_mode'] = $legacyMode;

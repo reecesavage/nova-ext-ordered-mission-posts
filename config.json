@@ -2,7 +2,7 @@
     "nova_ext_ordered_mission_posts": {
         "mission_ext_ordered_config_setting": {
             "name": "Timeline Configuration - Label",
-            "value": "Timeline Configurationdd"
+            "value": "Timeline Configuration"
         },
         "mission_ext_ordered_post_numbering": {
             "name": "Post Numbering - Label",
@@ -10,7 +10,7 @@
         },
         "mission_ext_ordered_default_mission_date": {
             "name": "Default Mission Date - Label",
-            "value": "Default Mission Date"
+            "value": ""
         },
         "mission_ext_ordered_default_stardate": {
             "name": "Default Stardate - Label",
@@ -44,5 +44,8 @@
             "name": "Suffix - Label (Mission Day 2 at 2300 <b>Hours<\/b>)",
             "value": ""
         }
+    },
+    "setting": {
+        "legacy_mode": "1"
     }
 }

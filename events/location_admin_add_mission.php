@@ -1,14 +1,11 @@
 <?php
  
 $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_action'], function($event){
+   
 
-   $id = isset($event['data']['id'])?$event['data']['id']:'';
-   if(!empty($id))
-   {
-    $query = $this->db->get_where('missions', array('mission_id' => $id));
-    $post = ($query->num_rows() > 0) ? $query->row() : false;
-   }
-  $this->config->load('extensions');
+
+
+   $this->config->load('extensions');
   $extensionsConfig = $this->config->item('extensions');
 
    $extConfigFilePath = dirname(__FILE__).'/../config.json';
@@ -17,6 +14,20 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
             $file = file_get_contents( $extConfigFilePath );
             $json = json_decode( $file, true );
     }
+
+
+   $id = isset($event['data']['id'])?$event['data']['id']:'';
+   $showLegacy='0';
+   if(!empty($id))
+   {
+    $query = $this->db->get_where('missions', array('mission_id' => $id));
+    $post = ($query->num_rows() > 0) ? $query->row() : false;
+    if(!empty($post) && $post->mission_ext_ordered_is_new_record==0 && (isset($json['setting']['legacy_mode'])&&$json['setting']['legacy_mode']==1 ))
+    {
+        $showLegacy='1';
+    }
+   }
+  
        
 
 
@@ -92,6 +103,8 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
          $event['data']['inputs']['mission_ext_ordered_legacy_mode'] = 'mission_ext_ordered_legacy_mode';
          $event['data']['value']['mission_ext_ordered_legacy_mode'] = '1';
        $event['data']['checked']['mission_ext_ordered_legacy_mode'] = $post ? $post->mission_ext_ordered_legacy_mode : '0';
+
+         $event['data']['legacyMode']['mission_ext_ordered_legacy_mode'] = "data-legacy=$showLegacy";
 
 
   }

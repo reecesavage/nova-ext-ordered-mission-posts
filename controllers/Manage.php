@@ -1,8 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once MODPATH.'core/libraries/Nova_controller_main.php';
+require_once MODPATH.'core/libraries/Nova_controller_admin.php';
 
-class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controller_main
+class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controller_admin
 {
 	public function __construct()
 	{
@@ -18,9 +18,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
   public function writeEmailCode()
   {   
-            
-
-       
+          
         $extControllerPath = APPPATH.'controllers/write.php';
         if ( !file_exists( $extControllerPath ) ) { 
         return [];
@@ -86,6 +84,12 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
        case 'mission_ext_ordered_legacy_mode':
        $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_legacy_mode INTEGER NOT NULL DEFAULT 0";
       break;
+         
+          case 'mission_ext_ordered_is_new_record':
+       $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_is_new_record int(11) DEFAULT 0";
+      break;
+
+      
       
     default:
       break;
@@ -94,10 +98,79 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
   }
 
 
-	public function checkExtension()
-  {  
+	public function saveColumn($requiredPostFields,$requiredMissionFields)
+  {   
 
-         $data['write']=true;
+        if(isset($_POST['submit']) && $_POST['submit']=='Add')
+        {  
+          $attr= isset($_POST['attribute'])?$_POST['attribute']:'';
+          
+          if (in_array($attr, $requiredMissionFields['mission']) == true) 
+          {
+              $table="nova_missions";
+             
+          }
+
+           if (in_array($attr, $requiredPostFields['post']) == true) 
+          {
+              $table="nova_posts";
+             
+          }
+          if(!empty($table))
+          {
+   
+            if (!$this->db->field_exists($attr, $table))
+            {   
+             $sql = $this->getQuery($attr);
+            if(!empty($sql))
+            { 
+              $query=$this->db->query($sql);
+
+              if (($key = array_search($attr, $requiredPostFields['post'])) !== false) {
+            unset($requiredPostFields['post'][$key]);
+          }
+
+        if (($key = array_search($attr, $requiredMissionFields['mission'])) !== false) {
+                unset($requiredMissionFields[$key]);
+          }
+             $list['post']=$requiredPostFields;
+             $list['mission']=$requiredMissionFields;
+            return $list;
+            } 
+            }
+
+            
+          } 
+        }
+
+        return false;
+       
+  }
+
+
+   public function config()
+  {
+
+
+  
+        $data['write']=true;
+
+         $requiredPostFields['post']=
+           ['nova_ext_ordered_post_day',
+       'nova_ext_ordered_post_time',
+       'nova_ext_ordered_post_date',
+       'nova_ext_ordered_post_stardate'];
+ 
+        $requiredMissionFields['mission']=
+            ['mission_ext_ordered_config_setting',
+       'mission_ext_ordered_post_numbering',
+       'mission_ext_ordered_default_mission_date',
+       'mission_ext_ordered_default_stardate',
+       'mission_ext_ordered_legacy_mode','mission_ext_ordered_is_new_record'];
+
+
+
+       
         $extControllerPath = APPPATH.'controllers/write.php';
          
         if ( !file_exists( $extControllerPath ) ) { 
@@ -140,116 +213,36 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
         }
         }
 
-               $requiredPostFields['post']=
-           ['nova_ext_ordered_post_day',
-       'nova_ext_ordered_post_time',
-       'nova_ext_ordered_post_date',
-       'nova_ext_ordered_post_stardate'];
- 
-        $requiredMissionFields['mission']=
-            ['mission_ext_ordered_config_setting',
-       'mission_ext_ordered_post_numbering',
-       'mission_ext_ordered_default_mission_date',
-       'mission_ext_ordered_default_stardate',
-       'mission_ext_ordered_legacy_mode'];
 
-        if(isset($_POST['submit']) && $_POST['submit']=='Submit')
+            
+        if( $list=$this->saveColumn($requiredPostFields,$requiredMissionFields))
         {  
-          $attr= isset($_POST['attribute'])?$_POST['attribute']:'';
+
           
-          if (in_array($attr, $requiredMissionFields['mission']) == true) 
-          {
-              $table="nova_missions";
-             
-          }
-
-           if (in_array($attr, $requiredPostFields['post']) == true) 
-          {
-              $table="nova_posts";
-             
-          }
-          if(!empty($table))
-          {
-   
-            if (!$this->db->field_exists($attr, $table))
-            {   
-             $sql = $this->getQuery($attr);
-            if(!empty($sql))
-            { 
-              $query=$this->db->query($sql);
-
-              if (($key = array_search($attr, $requiredPostFields['post'])) !== false) {
-            unset($requiredPostFields['post'][$key]);
-          }
-
-        if (($key = array_search($attr, $requiredMissionFields['mission'])) !== false) {
-                unset($requiredMissionFields[$key]);
-          }
-
-         $message = sprintf(
-          lang('flash_success'),
+           $requiredPostFields=$list['post'];
+           $requiredMissionFields=$list['mission'];
+              $message = sprintf(
+               lang('flash_success'),
           // TODO: i18n...
-          "$attr Column added successfully",
+              'Column Added successfully',
           '',
           ''
         );
 
+
         $flash['status'] = 'success';
         $flash['message'] = text_output($message);
+
         $this->_regions['flash_message'] = Location::view('flash', $this->skin, 'admin', $flash);
-            } 
-            }
-
-            
-          }
-           
-           
         }
-     
-   
-       $missionFields= $this->db->list_fields('nova_missions');
-       $postFields= $this->db->list_fields('nova_posts'); 
 
-
-        
-       $leftFields=[];
-        foreach($requiredPostFields['post'] as $key)
-        {
-          if (in_array($key, $postFields) == false) 
-          {
-             $leftFields[]=$key;
-          }
-        }
-         foreach($requiredMissionFields['mission'] as $key)
-        {
-          if (in_array($key, $missionFields) == false) 
-          {
-             $leftFields[]=$key;
-          }
-        }
-          $data['title']='Configuration';
-         $data['fields']=$leftFields;
-        $this->_regions['title'] .= 'Configuration';
-    $this->_regions['content'] = $this->extension['nova_ext_ordered_mission_posts']
-                                    ->view('check-config', $this->skin, 'admin', $data);
-                               
-    Template::assign($this->_regions);
-    Template::render();
-       
-  }
-
-  
-  public function config()
-  {
-	
-	  $this->_regions['javascript'] .= $this->extension['nova_ext_ordered_mission_posts']->inline_css('manage', 'admin', $data);
         $extConfigFilePath = dirname(__FILE__).'/../config.json';
          
-        if ( !file_exists( $extConfigFilePath ) ) {	
-			return [];
-		}
+        if ( !file_exists( $extConfigFilePath ) ) { 
+        return [];
+    }
         $file = file_get_contents( $extConfigFilePath );
-		    $data['jsons'] = json_decode( $file, true );
+        $data['jsons'] = json_decode( $file, true );
         $data['title']='Label Configuration';
         if(isset($_POST['submit']) && $_POST['submit']=='Submit')
         {
@@ -266,31 +259,94 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
           $data['jsons']['nova_ext_ordered_mission_posts']['label_view_suffix']['value']=$_POST['label_view_suffix'];
          $jsonEncode = json_encode( $data['jsons'],JSON_PRETTY_PRINT);
 
-
-
           file_put_contents($extConfigFilePath, $jsonEncode);
 
-          	$message = sprintf(
-					lang('flash_success'),
-					// TODO: i18n...
-					'Labeled',
-					lang('actions_updated'),
-					''
-				);
+            $message = sprintf(
+          lang('flash_success'),
+          // TODO: i18n...
+          'Labeled',
+          lang('actions_updated'),
+          ''
+        );
 
-				$flash['status'] = 'success';
-				$flash['message'] = text_output($message);
+        $flash['status'] = 'success';
+        $flash['message'] = text_output($message);
 
-				$this->_regions['flash_message'] = Location::view('flash', $this->skin, 'admin', $flash);
+        $this->_regions['flash_message'] = Location::view('flash', $this->skin, 'admin', $flash);
 
 
         }
+
+
+
+       $missionFields= $this->db->list_fields('nova_missions');
+       $postFields= $this->db->list_fields('nova_posts'); 
+       $data['checkPostChronological']=false;
+      $data['checkLegacy']=false;
+       if(isset($_POST['submit']) && $_POST['submit']=='checkPostChronological')
+       {
+                 
+                 $data['checkLegacy']=true;
+
+         if (!in_array('post_chronological_mission_post_day', $postFields) == false) 
+          {
+              $data['checkLegacy']=false;
+              $data['checkPostChronological']=true;
+
+          }
+
+       }
+
+        if(isset($_POST['submit']) && $_POST['submit']=='legacySubmit')
+       {
+
+         $legacy_mode=isset($_POST['legacy_mode'])?$_POST['legacy_mode']:0;
+
+         $data['jsons']['setting']['legacy_mode']=$legacy_mode;
+
+         $jsonEncode = json_encode( $data['jsons'],JSON_PRETTY_PRINT);
+          file_put_contents($extConfigFilePath, $jsonEncode);
+           $data['checkPostChronological']=true;
+
+                   $message = sprintf(
+          lang('flash_success'),
+          // TODO: i18n...
+          'Legacy mode successfully updated',
+          '',
+          ''
+        );
+
+        $flash['status'] = 'success';
+        $flash['message'] = text_output($message);
+
+        $this->_regions['flash_message'] = Location::view('flash', $this->skin, 'admin', $flash);
+       }
+       $leftFields=[];
+        foreach($requiredPostFields['post'] as $key)
+        {
+          if (in_array($key, $postFields) == false) 
+          {
+             $leftFields[]=$key;
+          }
+        }
+         foreach($requiredMissionFields['mission'] as $key)
+        {
+          if (in_array($key, $missionFields) == false) 
+          {
+             $leftFields[]=$key;
+          }
+        }
+         $data['fields']=$leftFields;
+       
      
-		$this->_regions['title'] .= 'Configuration';
-		$this->_regions['content'] = $this->extension['nova_ext_ordered_mission_posts']
-		                                ->view('config', $this->skin, 'admin', $data);
-		                           
-		Template::assign($this->_regions);
-		Template::render();
+
+
+    $this->_regions['title'] .= 'Configuration';
+    $this->_regions['content'] = $this->extension['nova_ext_ordered_mission_posts']
+                                    ->view('config', $this->skin, 'admin', $data);
+                               
+    Template::assign($this->_regions);
+    Template::render();
   }
+
 }

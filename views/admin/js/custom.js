@@ -1,13 +1,18 @@
 $(document).ready(function() {
-  
 
-  var image= "<?=base_url()?>/application/views/default/admin/images/calendar-day.png";
-  var $date = $('.datepick').datepicker({
+    
+
+    
+
+
+
+    $('.menu_category:contains("Site Management")')
+    .after('<li><a href="<?php echo site_url("extensions/nova_ext_ordered_mission_posts/Manage/config")?>"><span>Ordered Mission Posts</span></a></li>');
+
+
+   var $date = $('.datepick').datepicker({
             numberOfMonths: 2,
-            showButtonPanel: true,
-            showOn: 'button',
-            buttonImage: image,
-            buttonImageOnly: true
+            showButtonPanel: true
         });
         $date.closest('body').find('#ui-datepicker-div').wrap('<span class="UITheme"></span>');
         $date.datepicker('option', {dateFormat: 'yy-mm-dd'});
@@ -60,7 +65,12 @@ $(document).ready(function() {
        }else if(config=='day_time') {
             $('.mission_ext_ordered_default_mission_date').css("display", "none");
             $('.mission_ext_ordered_default_stardate').css("display", "none");
-              $('.mission_ext_ordered_legacy_mode').css("display",'block');
+
+               if($('[name="mission_ext_ordered_legacy_mode"]').attr('data-legacy')==1)
+               {
+                  $('.mission_ext_ordered_legacy_mode').css("display",'block');
+               }
+             
             
        }else {
           $('.mission_ext_ordered_default_mission_date').css("display", "none");
