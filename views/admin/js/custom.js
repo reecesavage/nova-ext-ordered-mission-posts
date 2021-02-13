@@ -1,14 +1,7 @@
 $(document).ready(function() {
 
-    
-
-    
-
-
-
-    $('.menu_category:contains("Site Management")')
-    .after('<li><a href="<?php echo site_url("extensions/nova_ext_ordered_mission_posts/Manage/config")?>"><span>Ordered Mission Posts</span></a></li>');
-
+    $('.menu_category:contains("Characters")')
+    .before('<li><a href="<?php echo site_url("extensions/nova_ext_ordered_mission_posts/Manage/config")?>"><span>Ordered Mission Posts</span></a></li><li class="spacer"></li>');
 
    var $date = $('.datepick').datepicker({
             numberOfMonths: 2,

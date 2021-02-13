@@ -31,6 +31,14 @@
 <?php echo form_close(); ?>
 <?php } else { ?>
    <div><br>All expected columns found in the database</div>
+
+   <?php echo form_open('extensions/nova_ext_ordered_mission_posts/Manage/config/');?>
+        
+
+        <br>
+			<button name="submit" type="submit" class="button-main" value="createIndex"><span>Create Index</span></button>
+
+   	<?php echo form_close(); ?>
 <?php } ?>
 
 

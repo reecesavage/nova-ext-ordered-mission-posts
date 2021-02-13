@@ -248,7 +248,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
         {
           $data['jsons']['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting']['value']=$_POST['mission_ext_ordered_config_setting'];
           $data['jsons']['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering']['value']=$_POST['mission_ext_ordered_post_numbering'];
-          $data['jsons']['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date']['value']=$_POST['mission_ext_ordered_default_mission_date'];
+          $data['jsons']['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_date']['value']=$_POST['mission_ext_ordered_default_date'];
           $data['jsons']['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate']['value']=$_POST['mission_ext_ordered_default_stardate'];
          $data['jsons']['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode']['value']=$_POST['mission_ext_ordered_legacy_mode'];
           $data['jsons']['nova_ext_ordered_mission_posts']['label_edit_day']['value']=$_POST['label_edit_day'];
@@ -283,6 +283,34 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
        $postFields= $this->db->list_fields('nova_posts'); 
        $data['checkPostChronological']=false;
       $data['checkLegacy']=false;
+
+      
+       if(isset($_POST['submit']) && $_POST['submit']=='createIndex')
+       {
+          
+          $sql="CREATE INDEX IF NOT EXISTS post_ordered_mission_post ON nova_posts (`nova_ext_ordered_post_day`,`nova_ext_ordered_post_date`,`nova_ext_ordered_post_stardate`,`nova_ext_ordered_post_time`)";
+          $this->db->query($sql);
+
+          $sql="CREATE INDEX IF NOT EXISTS post_ordered_mission ON nova_missions (`mission_ext_ordered_config_setting`,`mission_ext_ordered_post_numbering`,`mission_ext_ordered_default_mission_date`,`mission_ext_ordered_default_stardate`,`mission_ext_ordered_legacy_mode`,`mission_ext_ordered_is_new_record`)";
+
+            $this->db->query($sql);
+
+            $message = sprintf(
+          lang('flash_success'),
+          // TODO: i18n...
+          'Index added successfully',
+          '',
+          ''
+        );
+
+        $flash['status'] = 'success';
+        $flash['message'] = text_output($message);
+
+        $this->_regions['flash_message'] = Location::view('flash', $this->skin, 'admin', $flash);
+
+
+
+       }
        if(isset($_POST['submit']) && $_POST['submit']=='checkPostChronological')
        {
                  

@@ -8,10 +8,6 @@
             "name": "Post Numbering - Label",
             "value": "Post Numbering"
         },
-        "mission_ext_ordered_default_mission_date": {
-            "name": "Default Mission Date - Label",
-            "value": ""
-        },
         "mission_ext_ordered_default_stardate": {
             "name": "Default Stardate - Label",
             "value": "Default Stardate"
@@ -19,6 +15,10 @@
         "mission_ext_ordered_legacy_mode": {
             "name": "Emulate Chronological Mission Posts - Label",
             "value": "Day Time Legacy Mode"
+        },
+        "mission_ext_ordered_default_date": {
+            "name": "Default Mission Date - Label",
+            "value": "mission_ext_ordered_default_date"
         },
         "label_edit_day": {
             "name": "Mission Post Day - Label",

@@ -39,8 +39,8 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
                         ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering']['value']
                         : 'Post Numbering';
 
-  $defaultMissionDateLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date'])
-                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date']['value']
+  $defaultMissionDateLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_date'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_date']['value']
                         : 'Default Mission Date';
 
   $defaultStardateLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate'])
