@@ -20,3 +20,7 @@ require_once dirname(__FILE__).'/events/location_admin_add_mission.php';
 require_once dirname(__FILE__).'/events/parser_parse_string_nova_missionpost.php';
 
 
+require_once dirname(__FILE__) . '/controllers/Installer.php';
+$manager = ( new \nova_ext_ordered_mission_posts\Installer() )->install();
+
+

@@ -9,12 +9,17 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 		parent::__construct();
        
        
-
+      $this->ci =& get_instance();
        $this->_regions['nav_sub'] = Menu::build('adminsub', 'manageext');
 		//$this->_regions['nav_sub'] = Menu::build('sub', 'sim');
 
 		
 	}
+
+
+
+
+ 
 
   public function writeEmailCode()
   {   
@@ -287,13 +292,49 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
       
        if(isset($_POST['submit']) && $_POST['submit']=='createIndex')
        {
-          
-          $sql="CREATE INDEX IF NOT EXISTS post_ordered_mission_post ON nova_posts (`nova_ext_ordered_post_day`,`nova_ext_ordered_post_date`,`nova_ext_ordered_post_stardate`,`nova_ext_ordered_post_time`)";
-          $this->db->query($sql);
+           
+           $indexsql="SHOW INDEX FROM nova_posts";
+            $postIndex= $this->db->query($indexsql);
+             $postFlag=false;
+              $missionFlag=false;
+             foreach($postIndex->result() as $postResult)
+             {
+              if($postResult->Key_name=='post_ordered_mission_post')
+              {
+                 
+                $postFlag=true;
+                break;
+              }
+             }
 
-          $sql="CREATE INDEX IF NOT EXISTS post_ordered_mission ON nova_missions (`mission_ext_ordered_config_setting`,`mission_ext_ordered_post_numbering`,`mission_ext_ordered_default_mission_date`,`mission_ext_ordered_default_stardate`,`mission_ext_ordered_legacy_mode`,`mission_ext_ordered_is_new_record`)";
+             
+             if(empty($postFlag))
+             {
+               $sql="CREATE INDEX  post_ordered_mission_post ON nova_posts (`nova_ext_ordered_post_day`,`nova_ext_ordered_post_date`,`nova_ext_ordered_post_stardate`,`nova_ext_ordered_post_time`)";
+                $this->db->query($sql);
+             }
+
+          
+          
+              $indexsql="SHOW INDEX FROM nova_missions";
+            $missionIndex= $this->db->query($indexsql);
+            
+             foreach($missionIndex->result() as $missionResult)
+             {
+              if($missionResult->Key_name=='post_ordered_mission')
+              {
+                 
+                $missionFlag=true;
+                break;
+              }
+             }
+
+             if(empty($missionFlag))
+             {
+          $sql="CREATE INDEX  post_ordered_mission ON nova_missions (`mission_ext_ordered_config_setting`,`mission_ext_ordered_post_numbering`,`mission_ext_ordered_default_mission_date`,`mission_ext_ordered_default_stardate`,`mission_ext_ordered_legacy_mode`,`mission_ext_ordered_is_new_record`)";
 
             $this->db->query($sql);
+          }
 
             $message = sprintf(
           lang('flash_success'),
