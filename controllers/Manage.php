@@ -136,7 +136,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
           }
 
         if (($key = array_search($attr, $requiredMissionFields['mission'])) !== false) {
-                unset($requiredMissionFields[$key]);
+                unset($requiredMissionFields['mission'][$key]);
           }
              $list['post']=$requiredPostFields;
              $list['mission']=$requiredMissionFields;
@@ -155,9 +155,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
    public function config()
   {
-
-
-  
+        Auth::check_access('site/settings'); 
         $data['write']=true;
 
          $requiredPostFields['post']=
@@ -289,34 +287,23 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
        $data['checkPostChronological']=false;
       $data['checkLegacy']=false;
 
-      
-       if(isset($_POST['submit']) && $_POST['submit']=='createIndex')
-       {
-           
-           $indexsql="SHOW INDEX FROM nova_posts";
+
+       $indexsql="SHOW INDEX FROM nova_posts";
             $postIndex= $this->db->query($indexsql);
-             $postFlag=false;
-              $missionFlag=false;
+             $data['postFlag']=false;
+              $data['missionFlag']=false;
              foreach($postIndex->result() as $postResult)
              {
               if($postResult->Key_name=='post_ordered_mission_post')
               {
                  
-                $postFlag=true;
+                $data['postFlag']=true;
                 break;
               }
              }
 
-             
-             if(empty($postFlag))
-             {
-               $sql="CREATE INDEX  post_ordered_mission_post ON nova_posts (`nova_ext_ordered_post_day`,`nova_ext_ordered_post_date`,`nova_ext_ordered_post_stardate`,`nova_ext_ordered_post_time`)";
-                $this->db->query($sql);
-             }
 
-          
-          
-              $indexsql="SHOW INDEX FROM nova_missions";
+             $indexsql="SHOW INDEX FROM nova_missions";
             $missionIndex= $this->db->query($indexsql);
             
              foreach($missionIndex->result() as $missionResult)
@@ -324,16 +311,37 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
               if($missionResult->Key_name=='post_ordered_mission')
               {
                  
-                $missionFlag=true;
+                $data['missionFlag']=true;
                 break;
               }
              }
 
-             if(empty($missionFlag))
+      
+       if(isset($_POST['submit']) && $_POST['submit']=='createIndex')
+       {
+           
+          
+
+             
+             if(empty($data['postFlag']))
+             {
+               $sql="CREATE INDEX  post_ordered_mission_post ON nova_posts (`nova_ext_ordered_post_day`,`nova_ext_ordered_post_date`,`nova_ext_ordered_post_stardate`,`nova_ext_ordered_post_time`)";
+                $this->db->query($sql);
+
+                $data['postFlag']=true;
+             }
+
+          
+          
+              
+
+             if(empty($data['missionFlag']))
              {
           $sql="CREATE INDEX  post_ordered_mission ON nova_missions (`mission_ext_ordered_config_setting`,`mission_ext_ordered_post_numbering`,`mission_ext_ordered_default_mission_date`,`mission_ext_ordered_default_stardate`,`mission_ext_ordered_legacy_mode`,`mission_ext_ordered_is_new_record`)";
 
             $this->db->query($sql);
+
+            $data['missionFlag']=true;
           }
 
             $message = sprintf(
@@ -352,8 +360,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
 
        }
-       if(isset($_POST['submit']) && $_POST['submit']=='checkPostChronological')
-       {
+      
                  
                  $data['checkLegacy']=true;
 
@@ -364,7 +371,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
           }
 
-       }
+       
 
         if(isset($_POST['submit']) && $_POST['submit']=='legacySubmit')
        {

@@ -8,7 +8,7 @@
 			</p>
 <?php } ?>
 			<br>
-			<button name="submit" type="submit" class="button-main" value="Submit"><span>Submit</span></button>
+			<button name="submit" type="submit" class="button-main" value="Submit"><span>Update Labels</span></button>
 <?php echo form_close(); ?>
 
 
@@ -31,7 +31,11 @@
 <?php echo form_close(); ?>
 <?php } else { ?>
    <div><br>All expected columns found in the database</div>
+    
 
+    <?php  if(empty($postFlag) ||empty($missionFlag)){?>
+
+    
    <?php echo form_open('extensions/nova_ext_ordered_mission_posts/Manage/config/');?>
         
 
@@ -39,6 +43,10 @@
 			<button name="submit" type="submit" class="button-main" value="createIndex"><span>Create Index</span></button>
 
    	<?php echo form_close(); ?>
+
+   <?php } else {?>
+     <div><br>All expected indexes found in the database.</div>
+   <?php }?>
 <?php } ?>
 
 
@@ -58,16 +66,6 @@
 <?php } ?>
 
 
-
-
-	<?php echo form_open('extensions/nova_ext_ordered_mission_posts/Manage/config/');?>
-	<br>
-	
-     
-	<button name="submit" type="submit" class="button-main" value="checkPostChronological"><span>Check Chronological Mission Posts</span></button>
-
-
-	<?php echo form_close(); ?>
 
 	
 
