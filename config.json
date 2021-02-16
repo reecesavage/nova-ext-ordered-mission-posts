@@ -18,7 +18,7 @@
         },
         "mission_ext_ordered_default_date": {
             "name": "Default Mission Date - Label",
-            "value": "mission_ext_ordered_default_date"
+            "value": "Default Mission Date"
         },
         "label_edit_day": {
             "name": "Mission Post Day - Label",
@@ -34,7 +34,7 @@
         },
         "label_edit_time": {
             "name": "Mission Post Time - Label",
-            "value": "Times"
+            "value": "Time"
         },
         "label_view_concat": {
             "name": "Concat - Label (Mission Day 2 <b>at<\/b> 2300)",
@@ -46,6 +46,6 @@
         }
     },
     "setting": {
-        "legacy_mode": "1"
+        "legacy_mode": "0"
     }
 }
