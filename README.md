@@ -127,7 +127,7 @@ Many games prefer to order posts by post number. This extension will auotmatical
 ### Labels
 The majority of the labels for this extension can be modified in the admin control panel to fit the needs of your game.
 
-## `chronological_mission_posts` Support
+## chronological_mission_posts Support
 This extension requires you to replace `chronological_mission_posts` however you can enable support for existing missions if you used it previously.
 
 ### Enable Support
