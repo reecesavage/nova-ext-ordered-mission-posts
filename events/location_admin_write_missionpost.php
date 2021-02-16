@@ -18,6 +18,13 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
 
   $this->config->load('extensions');
   $extensionsConfig = $this->config->item('extensions');
+
+     $extConfigFilePath = dirname(__FILE__).'/../config.json';
+         
+        if ( file_exists( $extConfigFilePath ) ) { 
+            $file = file_get_contents( $extConfigFilePath );
+            $json = json_decode( $file, true );
+    }
     
 
     
@@ -27,32 +34,32 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
     }
   }
   
-  $editDayLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_day'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_day']
+  $editDayLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_day'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_edit_day']['value']
                         : 'Mission Day';
 
-  $editDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_date'])? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_date']
+  $editDateLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_date'])? $json['nova_ext_ordered_mission_posts']['label_edit_date']['value']
                         : 'Date';
 
 
-  $editStartDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_startdate']
+  $editStartDateLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_startdate'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_edit_startdate']['value']
                         : 'Stardate';
 
-  $editTimeLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_edit_time']
+  $editTimeLabel = isset($json['nova_ext_ordered_mission_posts']['label_edit_time'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_edit_time']['value']
                         : 'Time';
 
-  $viewPrefixLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_view_prefix'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_view_prefix']
+  $viewPrefixLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_prefix'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']['value']
                         : 'Mission Day';
 
-  $viewConcatLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_view_concat'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_view_concat']
+  $viewConcatLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_concat'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_concat']['value']
                         : 'at';
 
-  $viewSuffixLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['label_view_suffix'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['label_view_suffix']
+  $viewSuffixLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_suffix'])
+                        ? $json['nova_ext_ordered_mission_posts']['label_view_suffix']['value']
                         : '';
   
   switch($this->uri->segment(4)){
@@ -83,25 +90,12 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
 
       
 
-
        $event['data']['label']['nova_ext_ordered_post_date'] = $editDateLabel;
       $event['data']['inputs']['nova_ext_ordered_post_date'] = array(
         'name' => 'nova_ext_ordered_post_date',
         'id' => 'nova_ext_ordered_post_date',
-        'type'=>'date',
-        
-        'onkeypress' => 'return (function(evt)
-        {  
-            var charCode = (evt.which) ? evt.which : event.keyCode
-          if((charCode>=35 && charCode<=40)||(charCode>=96 && charCode<=105))
-        return true;
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
-    if(charCode==8)
-        return false;
-             
-        })(event)',
-        'value' => $post ? $post->nova_ext_ordered_post_date : '0'
+        'class'=>'medium datepick',
+        'data-value' => $post ? $post->nova_ext_ordered_post_date : ''
       );
 
 
@@ -130,7 +124,8 @@ $this->event->listen(['location', 'view', 'output', 'admin', 'write_missionpost'
     default:
      
     $this->config->load('extensions');
-    
+              
+             $event['output'] .= $this->extension['nova_ext_ordered_mission_posts']->inline_css('manage', 'admin', $event['data']);
                 $event['output'] .= $this->extension['jquery']['generator']
                       ->select('#timeline')->closest('p')
                       ->before(

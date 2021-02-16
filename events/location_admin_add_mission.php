@@ -1,37 +1,54 @@
 <?php
  
 $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_action'], function($event){
+   
 
 
-  
+
+   $this->config->load('extensions');
+  $extensionsConfig = $this->config->item('extensions');
+
+   $extConfigFilePath = dirname(__FILE__).'/../config.json';
+         
+        if ( file_exists( $extConfigFilePath ) ) { 
+            $file = file_get_contents( $extConfigFilePath );
+            $json = json_decode( $file, true );
+    }
+
+
    $id = isset($event['data']['id'])?$event['data']['id']:'';
+   $showLegacy='0';
    if(!empty($id))
    {
     $query = $this->db->get_where('missions', array('mission_id' => $id));
     $post = ($query->num_rows() > 0) ? $query->row() : false;
+    if(!empty($post) && $post->mission_ext_ordered_is_new_record==0 && (isset($json['setting']['legacy_mode'])&&$json['setting']['legacy_mode']==1 ))
+    {
+        $showLegacy='1';
+    }
    }
-  $this->config->load('extensions');
-  $extensionsConfig = $this->config->item('extensions');
+  
+       
 
 
-  $editConfigLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting']
-                        : 'Configuration';
+  $editConfigLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_config_setting']['value']
+                        : 'Timeline Configuration';
 
-  $editPostNumberLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering']
+  $editPostNumberLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_post_numbering']['value']
                         : 'Post Numbering';
 
-  $defaultMissionDateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_mission_date']
+  $defaultMissionDateLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_date'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_date']['value']
                         : 'Default Mission Date';
 
-  $defaultStardateLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate']
+  $defaultStardateLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_default_stardate']['value']
                         : 'Default Stardate';
 
-  $legacyModeLabel = isset($extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode'])
-                        ? $extensionsConfig['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode']
+  $legacyModeLabel = isset($json['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode'])
+                        ? $json['nova_ext_ordered_mission_posts']['mission_ext_ordered_legacy_mode']['value']
                         : 'Day Time Legacy Mode';
   
   switch($this->uri->segment(4)){
@@ -62,23 +79,9 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
       $event['data']['inputs']['mission_ext_ordered_default_mission_date'] = array(
         'name' => 'mission_ext_ordered_default_mission_date',
         'id' => 'mission_ext_ordered_default_mission_date',
-        'type'=>'date',
-        
-        'onkeypress' => 'return (function(evt)
-        {  
-            var charCode = (evt.which) ? evt.which : event.keyCode
-          if((charCode>=35 && charCode<=40)||(charCode>=96 && charCode<=105))
-        return true;
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
-    if(charCode==8)
-        return false;
-             
-        })(event)',
-        'value' => $post ? $post->mission_ext_ordered_default_mission_date : '1'
+        'class'=>'medium datepick',
+        'data-value' => $post ? $post->mission_ext_ordered_default_mission_date : ''
       );
-
-
        $event['data']['label']['mission_ext_ordered_default_stardate'] = $defaultStardateLabel;
         $event['data']['inputs']['mission_ext_ordered_default_stardate'] = array(
         'name' => 'mission_ext_ordered_default_stardate',
@@ -100,6 +103,8 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
          $event['data']['inputs']['mission_ext_ordered_legacy_mode'] = 'mission_ext_ordered_legacy_mode';
          $event['data']['value']['mission_ext_ordered_legacy_mode'] = '1';
        $event['data']['checked']['mission_ext_ordered_legacy_mode'] = $post ? $post->mission_ext_ordered_legacy_mode : '0';
+
+         $event['data']['legacyMode']['mission_ext_ordered_legacy_mode'] = "data-legacy=$showLegacy";
 
 
   }

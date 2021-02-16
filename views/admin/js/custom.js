@@ -1,17 +1,29 @@
 $(document).ready(function() {
 
 
+   var $date = $('.datepick').datepicker({
+            numberOfMonths: 2,
+            showButtonPanel: true
+        });
+        $date.closest('body').find('#ui-datepicker-div').wrap('<span class="UITheme"></span>');
+        $date.datepicker('option', {dateFormat: 'yy-mm-dd'});
+
     var mission = $('[name="mission"]').val();
     if (typeof mission === "undefined") {
         mission = $('[name="post_mission"]').val();
     }
+    
+     var defaultDate= $('input[name=mission_ext_ordered_default_mission_date]').attr('data-value');
+     $('input[name=mission_ext_ordered_default_mission_date]').val(defaultDate);
+    
+
+       var editDate= $('input[name=nova_ext_ordered_post_date]').attr('data-value');
+     $('input[name=nova_ext_ordered_post_date]').val(editDate);
+
     var config = $('[name="mission_ext_ordered_config_setting"]').val();
 
     showHideDefault(config);
     getMission(mission);
-
-
-
     $(document).on("change", '[name="mission"]', function(e) {
         mission = $(this).val();
         getMission(mission);
@@ -26,17 +38,34 @@ $(document).ready(function() {
      });
 
     function showHideDefault(config)
-    {
+    { 
+
+       
+       $('.mission_ext_ordered_legacy_mode').css("display",'none');
+
        if(config=='date_time'){
           $('.mission_ext_ordered_default_mission_date').css("display", "block");
           $('.mission_ext_ordered_default_stardate').css("display", "none");
+
+         
        }else if(config=='stardate')
        {
             $('.mission_ext_ordered_default_mission_date').css("display", "none");
              $('.mission_ext_ordered_default_stardate').css("display", "block");
-       }else {
+             
+       }else if(config=='day_time') {
             $('.mission_ext_ordered_default_mission_date').css("display", "none");
             $('.mission_ext_ordered_default_stardate').css("display", "none");
+
+               if($('[name="mission_ext_ordered_legacy_mode"]').attr('data-legacy')==1)
+               {
+                  $('.mission_ext_ordered_legacy_mode').css("display",'block');
+               }
+             
+            
+       }else {
+          $('.mission_ext_ordered_default_mission_date').css("display", "none");
+          $('.mission_ext_ordered_default_stardate').css("display", "none");
        }
     }
 
@@ -54,7 +83,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "get",
-            url: "<?php echo site_url('extensions/nova_ext_ordered_mission_posts/ajax/mission')?>",
+            url: "<?php echo site_url('extensions/nova_ext_ordered_mission_posts/Ajax/mission')?>",
             data: {
                 mission: mission
             },
@@ -93,6 +122,8 @@ $(document).ready(function() {
     }
 
     function showHideFields(configId) {
+      
+
 
         if (configId == 'day_time') {
             hideTimeLine();
