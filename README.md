@@ -1,7 +1,7 @@
 # Ordered Mission Posts - A [Nova](https://anodyne-productions.com/nova) Extension
 
 <p align="center">
-  <a href="https://github.com/reecesavage/nova-ext-ordered-mission-posts/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/Version-v0.0.0-brightgreen.svg"></a>
+  <a href="https://github.com/reecesavage/nova-ext-ordered-mission-posts/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/Version-v1.0.0-brightgreen.svg"></a>
   <a href="http://www.anodyne-productions.com/nova"><img src="https://img.shields.io/badge/Nova-v2.6.1-orange.svg"></a>
   <a href="https://www.php.net"><img src="https://img.shields.io/badge/PHP-v5.3.0-blue.svg"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-red.svg"></a>
@@ -103,21 +103,21 @@ Installation is now complete! If you previously used `chronological_mission_post
 The extension supports the following Timeline Configurations and will sort the posts chronologically unless Post Numbering is enabled.
 
 - Nova Default
--- This option displays the Default Timeline Field on Posts and sort is by post activation time, which is default Nova behavior.
+	- This option displays the Default Timeline Field on Posts and sort is by post activation time, which is default Nova behavior.
 - Day Time
--- Presents the writer with a Day and Time field on Mission Posts.
--- Posts are sorted by Day and then Time.
--- This is similar funcationality to `chronological_mission_posts`
+	- Presents the writer with a Day and Time field on Mission Posts.
+	- Posts are sorted by Day and then Time.
+	- This is similar funcationality to `chronological_mission_posts`
 - Date Time
--- Presents the writer with a Date and Time field on Mission Posts.
--- Posts are sorted by Date and then Time.
--- The Admin can also configure a Default Mission Date that will be seeded into posts to position the date picker.
--- Date format is Year-Month-Day ex: 2399-04-20
+	- Presents the writer with a Date and Time field on Mission Posts.
+	- Posts are sorted by Date and then Time.
+	- The Admin can also configure a Default Mission Date that will be seeded into posts to position the date picker.
+	- Date format is Year-Month-Day ex: 2399-04-20
 - Stardate (decimal)
--- Presents the writer with a Stardate and Time field on Mission Posts.
--- Posts are sorted by Stardate and then Time.
--- The Admin can also configure a Default Mission Stardate that will be seeded into posts to position the date picker.
--- Date format is decimal ex: 12345.67
+	- Presents the writer with a Stardate and Time field on Mission Posts.
+	- Posts are sorted by Stardate and then Time.
+	- The Admin can also configure a Default Mission Stardate that will be seeded into posts to position the date picker.
+	- Stardate format is decimal ex: 12345.67
 
 ### Post Numbering Support
 Many games prefer to order posts by post number. This extension will auotmatically add the correct post number and sort posts by number rather than chronologically.
