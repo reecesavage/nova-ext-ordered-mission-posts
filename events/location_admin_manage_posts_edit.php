@@ -2,6 +2,7 @@
 
 $this->event->listen(['location', 'view', 'data', 'admin', 'manage_posts_edit'], function($event){
   
+
 $id = (is_numeric($this->uri->segment(4))) ? $this->uri->segment(4) : false;
   $post = $id ? $this->posts->get_post($id) : null;
     
