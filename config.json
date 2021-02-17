@@ -46,6 +46,6 @@
         }
     },
     "setting": {
-        "legacy_mode": "1"
+        "legacy_mode": "0"
     }
 }
