@@ -1,8 +1,12 @@
 <?php 
 
-$this->event->listen(['parser', 'parse_string', 'output', 'write', 'missionpost'], function($event){
-     $this->config->load('extensions');
-            $extensionsConfig = $this->config->item('extensions');
+$this->event->listen(['location', 'view', 'data', 'main', 'sim_viewpost'], function($event){
+
+
+  $id = (is_numeric($this->uri->segment(3))) ? $this->uri->segment(3) : false;
+  $post = $id ? $this->posts->get_post($id) : null;
+
+    $extensionsConfig = $this->config->item('extensions');
 
              $extConfigFilePath = dirname(__FILE__).'/../config.json';
          
@@ -29,10 +33,11 @@ $this->event->listen(['parser', 'parse_string', 'output', 'write', 'missionpost'
                                   : '';
 
 
-     $id=$this->input->post('mission');
-   if(!empty($id))
+
+
+   if(!empty($post->post_mission))
    {
-   $query = $this->db->get_where('missions', array('mission_id' => $id));
+   $query = $this->db->get_where('missions', array('mission_id' => $post->post_mission));
 
 
    $model = ($query->num_rows() > 0) ? $query->row() : false;
@@ -73,13 +78,7 @@ $this->event->listen(['parser', 'parse_string', 'output', 'write', 'missionpost'
             }
               if($flag==true)
               {
-               $timelineValue = $viewPrefixLabel.' '.$this->input->post($column).' '.$viewConcatLabel.' '.$this->input->post($columnTime).' '.$viewSuffixLabel;
-                $event['output'] = preg_replace(
-                '/'.preg_quote(lang('email_content_post_timeline')).'.*\<br \/\>/', 
-                lang('email_content_post_timeline').' '.$timelineValue.'<br />', 
-                $event['output'], 
-                1
-            );
+              $event['data']['timeline'] = $viewPrefixLabel.' '.$post->$column.' '.$viewConcatLabel.' '.$post->$columnTime.' '.$viewSuffixLabel;
              }
 
              
@@ -88,8 +87,5 @@ $this->event->listen(['parser', 'parse_string', 'output', 'write', 'missionpost'
 
    }
    }  
-
-
-
-
+  
 });

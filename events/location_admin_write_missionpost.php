@@ -9,7 +9,6 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
   $post = $id ? $this->posts->get_post($id) : null;
   
 
- 
 
   $timepickerOptions = [
     'timeFormat' => 'HHmm',
@@ -63,7 +62,68 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'write_missionpost'],
                         : '';
   
   switch($this->uri->segment(4)){
-  
+   
+
+
+  case 'view':
+
+   if(!empty($post->post_mission))
+   {
+   $query = $this->db->get_where('missions', array('mission_id' => $post->post_mission));
+
+
+   $model = ($query->num_rows() > 0) ? $query->row() : false;
+   if(!empty($model))
+   {
+      if(!empty($model))
+      {
+          if($model->mission_ext_ordered_config_setting=='day_time')
+          {  
+            if($model->mission_ext_ordered_legacy_mode==1){
+                 $column='post_chronological_mission_post_day';
+                 $columnTime='post_chronological_mission_post_time';
+
+            }else {
+              $column='nova_ext_ordered_post_day';
+               $columnTime='nova_ext_ordered_post_time';
+            } 
+           
+           $viewPrefixLabel=$editDayLabel;
+            $flag=true;
+          
+          }
+          else if($model->mission_ext_ordered_config_setting=='date_time')
+          {
+              $column='nova_ext_ordered_post_date';
+               $columnTime='nova_ext_ordered_post_time';
+              $viewPrefixLabel=$editDateLabel;
+               $flag=true;
+            } 
+            else if($model->mission_ext_ordered_config_setting=='stardate')
+            {
+             $column='nova_ext_ordered_post_stardate';
+              $columnTime='nova_ext_ordered_post_time';
+             $viewPrefixLabel=$editStartDateLabel;
+             $flag=true;
+            }else {
+              $flag=false;
+            }
+              if($flag==true)
+              {
+              $event['data']['inputs']['timeline']['value'] = $viewPrefixLabel.' '.$post->$column.' '.$viewConcatLabel.' '.$post->$columnTime.' '.$viewSuffixLabel;
+             }
+
+             
+            
+      }
+
+   }
+   }  
+    
+
+
+      break;
+
     default:
       $event['data']['label']['nova_ext_ordered_post_day'] = $editDayLabel;
       $event['data']['inputs']['nova_ext_ordered_post_day'] = array(
