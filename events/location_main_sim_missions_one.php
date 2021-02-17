@@ -38,9 +38,6 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
    $model = ($query->num_rows() > 0) ? $query->row() : false;
    if(!empty($model))
    {
-
-      
-
       if($model->mission_ext_ordered_config_setting=='day_time'){
               
 
@@ -71,7 +68,7 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
             
           }
 
-$this->db->from('posts');
+  $this->db->from('posts');
   $this->db->where('post_mission', $event['data']['mission']);
   $this->db->where('post_status', 'activated');
   if($model->mission_ext_ordered_post_numbering==1)

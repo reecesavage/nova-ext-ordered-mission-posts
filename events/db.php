@@ -9,9 +9,9 @@ $this->event->listen(['db', 'insert', 'prepare', 'posts'], function($event){
    $model = ($query->num_rows() > 0) ? $query->row() : false;
    if(!empty($model) && $model->mission_ext_ordered_legacy_mode==1)
    {
-      if(($day = $this->input->post('nova_ext_ordered_post_day', true)) !== false)
+      if(($day = $this->input->post('post_chronological_mission_post_day', true)) !== false)
     $event['data']['post_chronological_mission_post_day'] = $day;
-  if(($time = $this->input->post('nova_ext_ordered_post_time', true)) !== false)
+  if(($time = $this->input->post('post_chronological_mission_post_time', true)) !== false)
     $event['data']['post_chronological_mission_post_time'] = $time;
 
    }else {
