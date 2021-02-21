@@ -1,6 +1,9 @@
 <?php 
 
 $this->event->listen(['parser', 'parse_string', 'output', 'write', 'missionpost'], function($event){
+
+
+
      $this->config->load('extensions');
             $extensionsConfig = $this->config->item('extensions');
 
@@ -87,9 +90,6 @@ $this->event->listen(['parser', 'parse_string', 'output', 'write', 'missionpost'
       }
 
    }
-   }  
-
-
-
+   } 
 
 });

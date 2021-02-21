@@ -84,6 +84,8 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
      $this->db->order_by($timeColumn, 'desc');
      
       
+  }else {
+    $this->db->order_by($postOrderColumnFallback, 'asc');
   }
  
   $this->db->limit(25, 0);
