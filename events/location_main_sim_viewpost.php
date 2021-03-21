@@ -89,7 +89,17 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_viewpost'], funct
   {
        $this->db->order_by('post_date', 'asc');
   }else if(!empty($column)) {
-     $this->db->order_by('cast('.$column.' as UNSIGNED)', 'desc');
+    
+
+      if($column=='nova_ext_ordered_post_date')
+      {
+         $cast='DATE';
+      }else {
+        $cast='UNSIGNED';
+      }
+
+     $this->db->order_by('cast('.$column.' as '.$cast.')', 'desc');
+
      $this->db->order_by($columnTime, 'desc');
   }else {
     $this->db->order_by('post_date', 'asc');
