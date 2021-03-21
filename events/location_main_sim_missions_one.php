@@ -79,8 +79,16 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
     $column= $data['mission_day'];
      $timeColumn= $data['mission_time'];
 
-     
-     $this->db->order_by('cast('.$column.' as UNSIGNED)', 'desc');
+      
+      
+      if($data['mission_day']=='nova_ext_ordered_post_date')
+      {
+         $cast='DATE';
+      }else {
+        $cast='UNSIGNED';
+      }
+
+     $this->db->order_by('cast('.$column.' as '.$cast.')', 'desc');
      $this->db->order_by($timeColumn, 'desc');
      
       
@@ -89,8 +97,9 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
   }
  
   $this->db->limit(25, 0);
-  $posts = $this->db->get();
 
+ 
+  $posts = $this->db->get();
   if ($posts->num_rows() > 0)
   {
     foreach ($posts->result() as $key=> $post)
