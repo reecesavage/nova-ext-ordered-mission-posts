@@ -1,6 +1,6 @@
 {
 	"name": "Ordered Mission Posts",
-	"version": "1.0.0",
+	"version": "1.0.5",
 	"description": "This extension provides multiple methods for ordering mission posts. Day/Time, Date/Time, Stardate(decimal)/Time, and Post Numbering.",
 	"url": "https://github.com/reecesavage/nova-ext-ordered-mission-posts",
 	"author": {
@@ -14,8 +14,12 @@
 		"timepicker"
 	],
 	"configFiles": [
-		
+		"config.json",
+		"views/test.txt"
 	],
 	"upgradeable": "yes",
-	"replaceConfigFiles":"yes"
+	"replaceConfigFiles":"yes",
+	"incompatibleExtensions":[ 
+             "chronological_mission_posts"
+	]
 }
