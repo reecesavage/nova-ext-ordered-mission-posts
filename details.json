@@ -21,5 +21,8 @@
 	"replaceConfigFiles":"yes",
 	"incompatibleExtensions":[ 
              "chronological_mission_posts"
+	],
+	"uninstall":[ 
+          "application/controllers/write.php"  
 	]
 }
