@@ -56,42 +56,43 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
 
   public function getQuery($switch) {
-
+      
+        $prefix= $this->db->dbprefix;
     switch ($switch)
     {
     case 'nova_ext_ordered_post_day':
-        $sql="ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_day INTEGER NOT NULL DEFAULT 1";
+        $sql="ALTER TABLE {$prefix}posts ADD COLUMN nova_ext_ordered_post_day INTEGER NOT NULL DEFAULT 1";
       break;
 
        case 'nova_ext_ordered_post_time':
-      $sql="ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_time VARCHAR(4) NOT NULL DEFAULT '0000'";
+      $sql="ALTER TABLE {$prefix}posts ADD COLUMN nova_ext_ordered_post_time VARCHAR(4) NOT NULL DEFAULT '0000'";
       break;
 
        case 'nova_ext_ordered_post_date':
-       $sql="ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_date VARCHAR(255) DEFAULT NULL";
+       $sql="ALTER TABLE {$prefix}posts ADD COLUMN nova_ext_ordered_post_date VARCHAR(255) DEFAULT NULL";
       break;
        case 'nova_ext_ordered_post_stardate':
-       $sql="ALTER TABLE nova_posts ADD COLUMN nova_ext_ordered_post_stardate VARCHAR(255) DEFAULT NULL";
+       $sql="ALTER TABLE {$prefix}posts ADD COLUMN nova_ext_ordered_post_stardate VARCHAR(255) DEFAULT NULL";
       break;
        case 'mission_ext_ordered_config_setting':
-       $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_config_setting VARCHAR(255) DEFAULT NULL";
+       $sql="ALTER TABLE {$prefix}missions ADD COLUMN mission_ext_ordered_config_setting VARCHAR(255) DEFAULT NULL";
       break;
        case 'mission_ext_ordered_post_numbering':
-       $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_post_numbering INTEGER NOT NULL DEFAULT 0";
+       $sql="ALTER TABLE {$prefix}missions ADD COLUMN mission_ext_ordered_post_numbering INTEGER NOT NULL DEFAULT 0";
       break;
        case 'mission_ext_ordered_default_mission_date':
-       $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_default_mission_date VARCHAR(255) DEFAULT NULL";
+       $sql="ALTER TABLE {$prefix}missions ADD COLUMN mission_ext_ordered_default_mission_date VARCHAR(255) DEFAULT NULL";
       break;
 
        case 'mission_ext_ordered_default_stardate':
-       $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_default_stardate VARCHAR(255) DEFAULT NULL";
+       $sql="ALTER TABLE {$prefix}missions ADD COLUMN mission_ext_ordered_default_stardate VARCHAR(255) DEFAULT NULL";
       break;
        case 'mission_ext_ordered_legacy_mode':
-       $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_legacy_mode INTEGER NOT NULL DEFAULT 0";
+       $sql="ALTER TABLE {$prefix}missions ADD COLUMN mission_ext_ordered_legacy_mode INTEGER NOT NULL DEFAULT 0";
       break;
          
           case 'mission_ext_ordered_is_new_record':
-       $sql="ALTER TABLE nova_missions ADD COLUMN mission_ext_ordered_is_new_record int(11) DEFAULT 0";
+       $sql="ALTER TABLE {$prefix}missions ADD COLUMN mission_ext_ordered_is_new_record int(11) DEFAULT 0";
       break;
 
       
@@ -320,24 +321,23 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
        if(isset($_POST['submit']) && $_POST['submit']=='createIndex')
        {
            
-          
+           
+             $prefix= $this->db->dbprefix;
 
              
              if(empty($data['postFlag']))
              {
-               $sql="CREATE INDEX  post_ordered_mission_post ON nova_posts (`nova_ext_ordered_post_day`,`nova_ext_ordered_post_date`,`nova_ext_ordered_post_stardate`,`nova_ext_ordered_post_time`)";
+               $sql="CREATE INDEX  post_ordered_mission_post ON {$prefix}posts (`nova_ext_ordered_post_day`,`nova_ext_ordered_post_date`,`nova_ext_ordered_post_stardate`,`nova_ext_ordered_post_time`)";
                 $this->db->query($sql);
 
                 $data['postFlag']=true;
              }
 
-          
-          
               
 
              if(empty($data['missionFlag']))
              {
-          $sql="CREATE INDEX  post_ordered_mission ON nova_missions (`mission_ext_ordered_config_setting`,`mission_ext_ordered_post_numbering`,`mission_ext_ordered_default_mission_date`,`mission_ext_ordered_default_stardate`,`mission_ext_ordered_legacy_mode`,`mission_ext_ordered_is_new_record`)";
+          $sql="CREATE INDEX  post_ordered_mission ON {$prefix}missions (`mission_ext_ordered_config_setting`,`mission_ext_ordered_post_numbering`,`mission_ext_ordered_default_mission_date`,`mission_ext_ordered_default_stardate`,`mission_ext_ordered_legacy_mode`,`mission_ext_ordered_is_new_record`)";
 
             $this->db->query($sql);
 

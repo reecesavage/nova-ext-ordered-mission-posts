@@ -19,6 +19,8 @@ require_once dirname(__FILE__).'/events/location_main_sim_missions_one.php';
 require_once dirname(__FILE__).'/events/location_admin_add_mission.php';
 require_once dirname(__FILE__).'/events/parser_parse_string_nova_missionpost.php';
 require_once dirname(__FILE__).'/events/location_main_sim_viewpost.php';
+require_once dirname(__FILE__).'/events/location_admin_manage_missions.php';
+require_once dirname(__FILE__).'/events/location_main_sim_listposts.php';
 
 
 

@@ -1,9 +1,10 @@
 <?php 
 
-$this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], function($event){
+$this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], function($event){
   
+    $id = (is_numeric($this->uri->segment(4, false, true))) ? $this->uri->segment(4, false, true) : false;
 
-  
+
   $this->config->load('extensions'); 
   $extensionsConfig = $this->config->item('extensions');
 
@@ -36,8 +37,11 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
   $event['data']['posts'] = [];
 
 
-   $query = $this->db->get_where('missions', array('mission_id' => $event['data']['mission']));
+   $query = $this->db->get_where('missions', array('mission_id' => $id));
    $model = ($query->num_rows() > 0) ? $query->row() : false;
+
+  
+
    if(!empty($model))
    {
       if($model->mission_ext_ordered_config_setting=='day_time'){
@@ -71,7 +75,7 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
           }
 
   $this->db->from('posts');
-  $this->db->where('post_mission', $event['data']['mission']);
+  $this->db->where('post_mission', $id);
   $this->db->where('post_status', 'activated');
   if($model->mission_ext_ordered_post_numbering==1)
   {
@@ -97,8 +101,12 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
   }else {
     $this->db->order_by($postOrderColumnFallback, 'asc');
   }
+
+   $offset = $this->uri->segment(5, 0, true);
+
+
  
-  $this->db->limit(25, 0);
+   $this->db->limit($this->pagination->per_page, $offset);
 
  
   $posts = $this->db->get();
@@ -124,9 +132,11 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
         $event['data']['posts'][] = [
             'id' => $post->post_id,
             'title' => $title,
-            'authors' => $this->char->get_authors($post->post_authors, true, true),
-            'timeline' => $timeline,
-            'location' => $post->post_location,
+            'author' => $this->char->get_authors($post->post_authors, true, true),
+           'date' => $timeline,
+          'location' => $post->post_location,
+          'mission' => $this->mis->get_mission($post->post_mission, 'mission_title'),
+          'mission_id' => $mission_id
         ];
     }
   }
