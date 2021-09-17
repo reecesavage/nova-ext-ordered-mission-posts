@@ -1,6 +1,22 @@
 $(document).ready(function() {
 
 
+     $("a[rel*=count]").click(function() {
+            var action = $(this).attr('myAction');
+            var id = $(this).attr('myID');
+            var location = '<?php echo site_url('extensions/nova_ext_ordered_mission_posts/Ajax/count_word/');?>/' + id;
+            
+            $.facebox(function() {
+                $.get(location, function(data) {
+                    $.facebox(data);
+                });
+            });
+            
+            return false;
+        });
+
+
+
    var $date = $('.datepick').datepicker({
             numberOfMonths: 2,
             showButtonPanel: true

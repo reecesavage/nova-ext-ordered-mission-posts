@@ -1,0 +1,28 @@
+{
+	"name": "Ordered Mission Posts",
+	"version": "1.0.5",
+	"description": "This extension provides multiple methods for ordering mission posts. Day/Time, Date/Time, Stardate(decimal)/Time, and Post Numbering.",
+	"url": "https://github.com/reecesavage/nova-ext-ordered-mission-posts",
+	"author": {
+		"name": "Sim Central",
+		"email": "info@simcentral.org",
+		"url": "https://simcentral.org"
+	},
+	"folder": "nova_ext_ordered_mission_posts",
+	"requiredExtensions": [
+		"jquery",
+		"timepicker"
+	],
+	"configFiles": [
+		"config.json",
+		"views/test.txt"
+	],
+	"upgradeable": "yes",
+	"replaceConfigFiles":"yes",
+	"incompatibleExtensions":[ 
+             "chronological_mission_posts"
+	],
+	"uninstall":[ 
+          "application/controllers/write.php"  
+	]
+}
