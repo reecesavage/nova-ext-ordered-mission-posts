@@ -2,7 +2,20 @@
 
 $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], function($event){
   
-    $id = (is_numeric($this->uri->segment(4, false, true))) ? $this->uri->segment(4, false, true) : false;
+    
+
+
+
+                    $postsModel=isset($event['data']['posts'])?$event['data']['posts']:[];
+                    $id=0;
+                    if(!empty($postsModel))
+                    {
+                        foreach($postsModel as $postModel)
+                        {
+                            $id= $postModel['mission_id'];
+                            break;
+                        }
+                    }
 
 
   $this->config->load('extensions'); 
@@ -14,6 +27,8 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], func
             $file = file_get_contents( $extConfigFilePath );
             $json = json_decode( $file, true );
     }
+
+
     
        $editDayLabel = isset($json['nova_ext_ordered_mission_posts']['label_view_prefix'])
                         ? $json['nova_ext_ordered_mission_posts']['label_view_prefix']['value']
@@ -44,6 +59,7 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], func
 
    if(!empty($model))
    {
+  
       if($model->mission_ext_ordered_config_setting=='day_time'){
               
 
@@ -104,6 +120,8 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], func
 
    $offset = $this->uri->segment(5, 0, true);
 
+   
+   
 
  
    $this->db->limit($this->pagination->per_page, $offset);
