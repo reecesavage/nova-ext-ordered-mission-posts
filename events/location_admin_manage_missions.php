@@ -9,7 +9,7 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions'], f
      {
         foreach($event['data']['missions']['current'] as $key =>$value)
         {
-          $event['data']['missions']['current'][$key]['desc'] = $value['desc'] ."<td class='col_100 align_right'><button><a href='#' myaction='count' myid='$key' rel='count' class='image'><?=$countId;?>Count</button></td></a>";
+          $event['data']['missions']['current'][$key]['desc'] = $value['desc'] ."<td class='col_100 align_right'><button><a href='#' myaction='count' myid='$key' rel='count' class='image'><?=$countId;?>Word Count</button></td></a>";
         }
      }
 
