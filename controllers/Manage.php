@@ -52,6 +52,39 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
 
   }
+
+
+  public function writeFeedCode()
+  {   
+          
+        $extControllerPath = APPPATH.'controllers/feed.php';
+        if ( !file_exists( $extControllerPath ) ) { 
+        return [];
+        }
+        $controllerFile = file_get_contents( $extControllerPath );
+        $pattern = '/public\sfunction\sposts/';
+        if (!preg_match($pattern, $controllerFile)) {
+       $writeFilePath = dirname(__FILE__).'/../feed.txt';
+        if ( !file_exists( $writeFilePath ) ) { 
+           return [];
+        }
+        $file = file_get_contents( $writeFilePath );
+
+       $contents = file($extControllerPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+      $size = count($contents);
+      $contents[$size-1] = "\n".$file;
+      $temp = implode("\n", $contents);
+
+     
+      file_put_contents($extControllerPath, $temp);
+         
+         return true;
+        }
+      return false;
+              
+
+
+  }
     
 
 
@@ -158,7 +191,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
   {
         Auth::check_access('site/settings'); 
         $data['write']=true;
-
+      $data['feed']=true;
          $requiredPostFields['post']=
            ['nova_ext_ordered_post_day',
        'nova_ext_ordered_post_time',
@@ -171,6 +204,53 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
        'mission_ext_ordered_default_mission_date',
        'mission_ext_ordered_default_stardate',
        'mission_ext_ordered_legacy_mode','mission_ext_ordered_is_new_record'];
+
+
+
+
+        $extFeedControllerPath = APPPATH.'controllers/feed.php';
+         
+        if ( !file_exists( $extFeedControllerPath ) ) { 
+        return [];
+        }
+        $file = file_get_contents( $extFeedControllerPath );
+        $pattern = '/public\sfunction\sposts/';
+        if (!preg_match($pattern, $file)) {
+           $data['feed']=false;
+
+
+
+        if(isset($_POST['submit']) && $_POST['submit']=='feed')
+        {
+             
+            if($this->writeFeedCode())
+            {
+              $data['feed']=true;
+                $message = sprintf(
+               lang('flash_success'),
+          // TODO: i18n...
+              'Rss Feed Function',
+          lang('actions_added'),
+          ''
+        );
+            }else {
+                    $message = sprintf(
+               lang('flash_failure'),
+          // TODO: i18n...
+              'Rss Feed Function',
+          lang('actions_added'),
+          ''
+        );
+            }
+         
+
+        $flash['status'] = 'success';
+        $flash['message'] = text_output($message);
+
+        $this->_regions['flash_message'] = Location::view('flash', $this->skin, 'admin', $flash);
+
+        }
+        }
 
 
 
