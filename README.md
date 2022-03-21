@@ -1,7 +1,7 @@
 # Ordered Mission Posts - A [Nova](https://anodyne-productions.com/nova) Extension
 
 <p align="center">
-  <a href="https://github.com/reecesavage/nova-ext-ordered-mission-posts/releases/tag/v1.1.3"><img src="https://img.shields.io/badge/Version-v1.1.3-brightgreen.svg"></a>
+  <a href="https://github.com/reecesavage/nova-ext-ordered-mission-posts/releases/tag/v1.1.4"><img src="https://img.shields.io/badge/Version-v1.1.4-brightgreen.svg"></a>
   <a href="http://www.anodyne-productions.com/nova"><img src="https://img.shields.io/badge/Nova-v2.6+-orange.svg"></a>
   <a href="https://www.php.net"><img src="https://img.shields.io/badge/PHP-v5.3.0-blue.svg"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-red.svg"></a>
