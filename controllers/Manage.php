@@ -24,7 +24,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
   public function writeEmailCode()
   {   
           
-        $extControllerPath = APPPATH.'controllers/write.php';
+        $extControllerPath = APPPATH.'controllers/Write.php';
         if ( !file_exists( $extControllerPath ) ) { 
         return [];
         }
@@ -57,7 +57,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
   public function writeFeedCode()
   {   
           
-        $extControllerPath = APPPATH.'controllers/feed.php';
+        $extControllerPath = APPPATH.'controllers/Feed.php';
         if ( !file_exists( $extControllerPath ) ) { 
         return [];
         }
@@ -208,7 +208,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
 
 
-        $extFeedControllerPath = APPPATH.'controllers/feed.php';
+        $extFeedControllerPath = APPPATH.'controllers/Feed.php';
          
         if ( !file_exists( $extFeedControllerPath ) ) { 
         return [];
@@ -255,7 +255,7 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 
 
        
-        $extControllerPath = APPPATH.'controllers/write.php';
+        $extControllerPath = APPPATH.'controllers/Write.php';
          
         if ( !file_exists( $extControllerPath ) ) { 
         return [];
