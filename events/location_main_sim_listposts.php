@@ -93,10 +93,7 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], func
   $this->db->from('posts');
   $this->db->where('post_mission', $id);
   $this->db->where('post_status', 'activated');
-  if($model->mission_ext_ordered_post_numbering==1)
-  {
-       $this->db->order_by($postOrderColumnFallback, 'asc');
-  }else if(!empty($data['mission_day'])) {
+  if(!empty($data['mission_day'])) {
 
     $column= $data['mission_day'];
      $timeColumn= $data['mission_time'];
@@ -110,8 +107,8 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], func
         $cast='UNSIGNED';
       }
 
-     $this->db->order_by('cast('.$column.' as '.$cast.')', 'desc');
-     $this->db->order_by($timeColumn, 'desc');
+     $this->db->order_by('cast('.$column.' as '.$cast.')', 'asc');
+     $this->db->order_by($timeColumn, 'asc');
      
       
   }else {
@@ -132,7 +129,7 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], func
   {
     foreach ($posts->result() as $key=> $post)
     {     
-        $i=$key+1;
+        $i=$offset+$key+1;
           if($model->mission_ext_ordered_post_numbering==1)
           {
              $title="Post $i - $post->post_title";
@@ -151,12 +148,19 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_listposts'], func
             'id' => $post->post_id,
             'title' => $title,
             'author' => $this->char->get_authors($post->post_authors, true, true),
+           'timeline' => $timeline,
+           // 'date' mirrors 'timeline' for the stock core view, which Nova renders then discards before our output listener replaces it
            'date' => $timeline,
           'location' => $post->post_location,
           'mission' => $this->mis->get_mission($post->post_mission, 'mission_title'),
-          'mission_id' => $mission_id
+          'mission_id' => $post->post_mission
         ];
     }
   }
    }
+});
+
+$this->event->listen(['location', 'view', 'output', 'main', 'sim_listposts'], function($event){
+  $event['output'] = $this->extension['nova_ext_ordered_mission_posts']
+        ->view('sim_listposts', $this->skin, 'main', $event['data']);
 });

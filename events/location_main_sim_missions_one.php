@@ -73,10 +73,7 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
   $this->db->from('posts');
   $this->db->where('post_mission', $event['data']['mission']);
   $this->db->where('post_status', 'activated');
-  if($model->mission_ext_ordered_post_numbering==1)
-  {
-       $this->db->order_by($postOrderColumnFallback, 'asc');
-  }else if(!empty($data['mission_day'])) {
+  if(!empty($data['mission_day'])) {
 
     $column= $data['mission_day'];
      $timeColumn= $data['mission_time'];
@@ -90,8 +87,8 @@ $this->event->listen(['location', 'view', 'data', 'main', 'sim_missions_one'], f
         $cast='UNSIGNED';
       }
 
-     $this->db->order_by('cast('.$column.' as '.$cast.')', 'desc');
-     $this->db->order_by($timeColumn, 'desc');
+     $this->db->order_by('cast('.$column.' as '.$cast.')', 'asc');
+     $this->db->order_by($timeColumn, 'asc');
      
       
   }else {
