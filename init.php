@@ -26,6 +26,9 @@ require_once dirname(__FILE__).'/events/location_main_sim_listposts.php';
 
 
 
+require_once dirname(__FILE__).'/libraries/Email.php';
+require_once dirname(__FILE__).'/libraries/Feed.php';
+
 require_once dirname(__FILE__) . '/controllers/Installer.php';
 $manager = ( new \nova_ext_ordered_mission_posts\Installer() )->install();
 
