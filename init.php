@@ -26,6 +26,7 @@ require_once dirname(__FILE__).'/events/location_main_sim_listposts.php';
 
 
 
+require_once dirname(__FILE__).'/libraries/PostNumber.php';
 require_once dirname(__FILE__).'/libraries/Email.php';
 require_once dirname(__FILE__).'/libraries/Feed.php';
 
