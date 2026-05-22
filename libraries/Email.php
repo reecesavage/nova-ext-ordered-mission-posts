@@ -29,16 +29,26 @@ class Email
 			return $data;
 		}
 
-		$query = $ci->db->get_where('missions', array('mission_id' => $missionId));
-		$mission = ($query->num_rows() > 0) ? $query->row() : false;
+		// The post has been inserted by the time _email runs; the most recent
+		// activated post for this mission is the one being announced. Look it
+		// up by post_id so the chronological number matches the website even
+		// when the new post sorts ahead of existing ones.
+		$latestQuery = $ci->db
+			->select('post_id')
+			->where('post_mission', $missionId)
+			->where('post_status', 'activated')
+			->order_by('post_date', 'desc')
+			->limit(1)
+			->get('posts');
+		$latest = ($latestQuery->num_rows() > 0) ? $latestQuery->row() : false;
 
-		if ( ! empty($mission) && $mission->mission_ext_ordered_post_numbering == 1) {
-			$count = $ci->db->get_where('posts', array(
-				'post_mission' => $missionId,
-				'post_status'  => 'activated',
-			))->num_rows();
+		if (empty($latest)) {
+			return $data;
+		}
 
-			$data['title'] = 'Post '.$count.' - '.$data['title'];
+		$number = PostNumber::forPost($latest->post_id, $missionId);
+		if ($number !== null) {
+			$data['title'] = 'Post '.$number.' - '.$data['title'];
 		}
 
 		return $data;

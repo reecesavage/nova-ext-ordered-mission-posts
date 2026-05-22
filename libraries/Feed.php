@@ -85,7 +85,14 @@ class Feed
 				}
 
 				$data['entries'][$i]['link'] = site_url('sim/viewpost/'.$post->post_id);
-				$data['entries'][$i]['title'] = $post->post_title;
+
+				$title = $post->post_title;
+				$number = PostNumber::forPost($post->post_id, $post->post_mission);
+				if ($number !== null) {
+					$title = 'Post '.$number.' - '.$title;
+				}
+				$data['entries'][$i]['title'] = $title;
+
 				$data['entries'][$i]['date'] = $post->post_date;
 
 				$authors = explode(',', $post->post_authors);
