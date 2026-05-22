@@ -18,6 +18,7 @@ $this->event->listen(['location', 'view', 'data', 'admin', 'manage_missions_acti
 
    $id = isset($event['data']['id'])?$event['data']['id']:'';
    $showLegacy='0';
+   $post = false;
    if(!empty($id))
    {
     $query = $this->db->get_where('missions', array('mission_id' => $id));
