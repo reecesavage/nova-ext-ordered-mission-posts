@@ -298,14 +298,6 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 		if ($state === 'missing_file') {
 			return array('error', 'Could not find '.$m['file'].'.');
 		}
-		if ($state === 'legacy') {
-			return array(
-				'error',
-				'An older, unmarked version of '.$m['method'].'() is present in '.basename($m['file']).'. '
-				.'Remove that method from the file by hand, then run this again. See the README for details.',
-			);
-		}
-
 		$file = file_get_contents($m['file']);
 		if ( ! file_exists($m['txt'])) {
 			return array('error', 'Cannot find '.basename($m['txt']).' in the extension.');
@@ -320,6 +312,12 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 				return array('error', 'Could not locate the managed block in '.basename($m['file']).'. Update by hand per the README.');
 			}
 			$file = $new;
+		} elseif ($state === 'legacy') {
+			$span = $this->_findUnmarkedMethodSpan($file, $m['method']);
+			if ($span === null) {
+				return array('error', 'Could not parse the existing '.$m['method'].'() method in '.basename($m['file']).'. Update by hand per the README.');
+			}
+			$file = substr($file, 0, $span[0]).$block."\n".substr($file, $span[1]);
 		} else {
 			// state === 'missing' - insert before the class's final closing brace
 			$pos = strrpos($file, '}');
@@ -332,5 +330,129 @@ class __extensions__nova_ext_ordered_mission_posts__Manage extends Nova_controll
 		file_put_contents($m['file'], $file);
 
 		return array('success', $m['label'].' updated successfully.');
+	}
+
+	/**
+	 * Locate the byte span of an unmarked $methodName declaration in $content.
+	 * Returns array($start, $end) (end exclusive, includes the trailing newline
+	 * if present), or null if the method can't be cleanly located. A minimal
+	 * lexer is used so that braces, comments, and string literals don't fool
+	 * the counter.
+	 */
+	private function _findUnmarkedMethodSpan($content, $methodName)
+	{
+		$len = strlen($content);
+		$state = 'normal';
+		$functionPositions = array();
+		$i = 0;
+
+		// First pass: collect offsets of the `function` keyword that fall
+		// outside any string or comment.
+		while ($i < $len) {
+			$c = $content[$i];
+			$next = ($i + 1 < $len) ? $content[$i + 1] : '';
+
+			if ($state === 'normal') {
+				if ($c === "'") { $state = 'single'; $i++; continue; }
+				if ($c === '"') { $state = 'double'; $i++; continue; }
+				if ($c === '/' && $next === '/') { $state = 'line_comment'; $i += 2; continue; }
+				if ($c === '/' && $next === '*') { $state = 'block_comment'; $i += 2; continue; }
+				if ($c === 'f'
+					&& substr($content, $i, 8) === 'function'
+					&& ($i === 0 || ! self::_isIdentChar($content[$i - 1]))
+					&& ($i + 8 >= $len || ! self::_isIdentChar($content[$i + 8]))) {
+					$functionPositions[] = $i;
+					$i += 8;
+					continue;
+				}
+			} elseif ($state === 'single') {
+				if ($c === '\\') { $i += 2; continue; }
+				if ($c === "'") $state = 'normal';
+			} elseif ($state === 'double') {
+				if ($c === '\\') { $i += 2; continue; }
+				if ($c === '"') $state = 'normal';
+			} elseif ($state === 'line_comment') {
+				if ($c === "\n") $state = 'normal';
+			} elseif ($state === 'block_comment') {
+				if ($c === '*' && $next === '/') { $state = 'normal'; $i += 2; continue; }
+			}
+			$i++;
+		}
+
+		foreach ($functionPositions as $fnPos) {
+			$p = $fnPos + 8;
+			while ($p < $len && ctype_space($content[$p])) {
+				$p++;
+			}
+			$nameLen = strlen($methodName);
+			if ($p + $nameLen > $len) continue;
+			if (substr($content, $p, $nameLen) !== $methodName) continue;
+			if ($p + $nameLen < $len && self::_isIdentChar($content[$p + $nameLen])) continue;
+
+			// Walk back through whitespace + visibility modifiers to find the
+			// declaration's true start.
+			$k = $fnPos - 1;
+			while ($k >= 0 && ($content[$k] === ' ' || $content[$k] === "\t")) {
+				$k--;
+			}
+			foreach (array('static', 'final', 'abstract', 'protected', 'public', 'private') as $kw) {
+				$klen = strlen($kw);
+				if ($k - $klen + 1 >= 0
+					&& substr($content, $k - $klen + 1, $klen) === $kw
+					&& ($k - $klen < 0 || ! self::_isIdentChar($content[$k - $klen]))) {
+					$k -= $klen;
+					while ($k >= 0 && ($content[$k] === ' ' || $content[$k] === "\t")) {
+						$k--;
+					}
+				}
+			}
+			$start = $k + 1;
+
+			// Walk forward, counting braces (skipping strings/comments) until
+			// the method's matching close brace is found.
+			$q = $p + $nameLen;
+			$bs = 'normal';
+			$depth = 0;
+			$started = false;
+			while ($q < $len) {
+				$c = $content[$q];
+				$next = ($q + 1 < $len) ? $content[$q + 1] : '';
+				if ($bs === 'normal') {
+					if ($c === '{') {
+						$depth++;
+						$started = true;
+					} elseif ($c === '}') {
+						$depth--;
+						if ($started && $depth === 0) {
+							$end = $q + 1;
+							if ($end < $len && $content[$end] === "\n") $end++;
+							return array($start, $end);
+						}
+					} elseif ($c === "'") { $bs = 'single'; $q++; continue; }
+					elseif ($c === '"') { $bs = 'double'; $q++; continue; }
+					elseif ($c === '/' && $next === '/') { $bs = 'line_comment'; $q += 2; continue; }
+					elseif ($c === '/' && $next === '*') { $bs = 'block_comment'; $q += 2; continue; }
+				} elseif ($bs === 'single') {
+					if ($c === '\\') { $q += 2; continue; }
+					if ($c === "'") $bs = 'normal';
+				} elseif ($bs === 'double') {
+					if ($c === '\\') { $q += 2; continue; }
+					if ($c === '"') $bs = 'normal';
+				} elseif ($bs === 'line_comment') {
+					if ($c === "\n") $bs = 'normal';
+				} elseif ($bs === 'block_comment') {
+					if ($c === '*' && $next === '/') { $bs = 'normal'; $q += 2; continue; }
+				}
+				$q++;
+			}
+			return null;
+		}
+
+		return null;
+	}
+
+	private static function _isIdentChar($ch)
+	{
+		return ctype_alnum($ch) || $ch === '_';
 	}
 }
