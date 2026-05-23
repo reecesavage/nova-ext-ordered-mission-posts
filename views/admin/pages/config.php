@@ -2,7 +2,7 @@
 	$stateLabels = array(
 		'current'      => 'Installed and up to date',
 		'outdated'     => 'Installed but outdated - update available',
-		'legacy'       => 'Older unmarked version present - manual update required',
+		'legacy'       => 'Older unmarked version present - update available',
 		'missing'      => 'Not installed',
 		'missing_file' => 'Controller file not found',
 	);
@@ -97,14 +97,6 @@
 <?php if ($email_state === 'current'): ?>
 	<p>The post email code in <code>application/controllers/Write.php</code> is up to date.</p>
 
-<?php elseif ($email_state === 'legacy'): ?>
-	<p>
-		An older version of <code>_email()</code> is present in
-		<code>application/controllers/Write.php</code> without the managed-block markers, so it can't be
-		updated automatically. Remove the existing <code>_email()</code> method from that file (or replace
-		<code>Write.php</code> with the stock Nova stub), then come back and click Install.
-	</p>
-
 <?php elseif ($email_state === 'missing_file'): ?>
 	<p>
 		<code>application/controllers/Write.php</code> was not found. Restore the file from your Nova install before continuing.
@@ -114,6 +106,9 @@
 	<p>
 		<?php if ($email_state === 'outdated'): ?>
 			The injected code in <code>application/controllers/Write.php</code> is out of date and will be replaced.
+		<?php elseif ($email_state === 'legacy'): ?>
+			An older, unmarked version of <code>_email()</code> is present in <code>application/controllers/Write.php</code>
+			and will be replaced with the current shim.
 		<?php else: ?>
 			Inject the post-numbering shim into <code>application/controllers/Write.php</code> so mission post emails
 			can include the post number.
@@ -121,7 +116,7 @@
 	</p>
 	<?php echo form_open('extensions/nova_ext_ordered_mission_posts/Manage/config/');?>
 		<button name="action" type="submit" class="button-main" value="install_email">
-			<span><?php echo ($email_state === 'outdated') ? 'Update Email Code' : 'Install Email Code';?></span>
+			<span><?php echo ($email_state === 'missing') ? 'Install Email Code' : 'Update Email Code';?></span>
 		</button>
 	<?php echo form_close();?>
 <?php endif; ?>
@@ -136,14 +131,6 @@
 <?php if ($feed_state === 'current'): ?>
 	<p>The RSS feed code in <code>application/controllers/Feed.php</code> is up to date.</p>
 
-<?php elseif ($feed_state === 'legacy'): ?>
-	<p>
-		An older version of <code>posts()</code> is present in
-		<code>application/controllers/Feed.php</code> without the managed-block markers, so it can't be
-		updated automatically. Remove the existing <code>posts()</code> method from that file (or replace
-		<code>Feed.php</code> with the stock Nova stub), then come back and click Install.
-	</p>
-
 <?php elseif ($feed_state === 'missing_file'): ?>
 	<p>
 		<code>application/controllers/Feed.php</code> was not found. Restore the file from your Nova install before continuing.
@@ -153,6 +140,9 @@
 	<p>
 		<?php if ($feed_state === 'outdated'): ?>
 			The injected feed code in <code>application/controllers/Feed.php</code> is out of date and will be replaced.
+		<?php elseif ($feed_state === 'legacy'): ?>
+			An older, unmarked version of <code>posts()</code> is present in <code>application/controllers/Feed.php</code>
+			and will be replaced with the current shim.
 		<?php else: ?>
 			Inject the enhanced RSS feed shim into <code>application/controllers/Feed.php</code> so
 			<code>/feed/posts</code> includes timeline information for ordered missions.
@@ -160,7 +150,7 @@
 	</p>
 	<?php echo form_open('extensions/nova_ext_ordered_mission_posts/Manage/config/');?>
 		<button name="action" type="submit" class="button-main" value="install_feed">
-			<span><?php echo ($feed_state === 'outdated') ? 'Update Feed Code' : 'Install Feed Code';?></span>
+			<span><?php echo ($feed_state === 'missing') ? 'Install Feed Code' : 'Update Feed Code';?></span>
 		</button>
 	<?php echo form_close();?>
 <?php endif; ?>
